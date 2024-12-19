@@ -1,0 +1,20 @@
+- Today for 3 Frog？
+	- 1
+	- 2
+	- 3
+- Before Work
+	- 6:30 - 7:30 English
+- Deep Work 1
+	- 09:00 - 11:15
+- Noon
+	- 11:40 - 12:10 30m
+	- 12:30 - 13:10 Read Book
+	- 13:10 - 13:30 Rest
+- Deep Work 2
+	- 13:30 - 17:30
+- Running
+	- 19:30 - 20:30
+- Shallow Work
+- After Work
+- Analysis
+- Think

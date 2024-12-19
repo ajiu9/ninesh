@@ -19,7 +19,7 @@
     "zsh"
   ],
   "main": "./dist/index.js",
-  "bin": "bin/cli.js",
+  "bin": "./bin/index.js",
   "files": [
     "bin",
     "dist"
