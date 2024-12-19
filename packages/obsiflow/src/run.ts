@@ -1,10 +1,10 @@
+import type { CurrentTimeType } from './utils/index'
+import { existsSync } from 'node:fs'
+
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
-
 // import { parseArgs } from 'node:util'
 import path from 'node:path'
-import { existsSync } from 'node:fs'
-import type { CurrentTimeType } from './utils/index'
 import { formatDate, getTasksData } from './utils/index'
 
 const uPath = process.env.HOME
@@ -37,9 +37,9 @@ export async function run(argsOptions) {
   }
   const fileName = currentTime[nameEnum[target]]
   let targetTemplateData = ''
-  if (fileName === 'task') {
+  if (fileName === 'task')
     targetTemplateData = getTasksData(args)
-  }
+
   else {
     let templateData = ''
     const templatePath = config[target]?.template

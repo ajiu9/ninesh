@@ -13,8 +13,8 @@
         "default": "./dist/obsiflow.cjs.prod.js"
       },
       "module": "./dist/obsiflow.esm-bundler.js",
-      "require": "./dist/obsiflow.cjs.prod.js",
-      "import": "./dist/obsiflow.esm-bundler.js"
+      "import": "./dist/obsiflow.esm-bundler.js",
+      "require": "./dist/obsiflow.cjs.prod.js"
     },
     "./*": "./*"
   },

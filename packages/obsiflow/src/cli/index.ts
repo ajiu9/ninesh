@@ -11,17 +11,16 @@ export async function main(): Promise<void> {
 
     const { help, version, quiet, options } = await parseArgs()
 
-    if (help) {
+    if (help)
       process.exit(ExitCode.Success)
-    }
+
     else if (version) {
       // Show the version number and exit
       console.log(packageVersion)
       process.exit(ExitCode.Success)
     }
-    else {
+    else
       if (!quiet) run(options)
-    }
   }
   catch (error) {
     errorHandler(error as Error)

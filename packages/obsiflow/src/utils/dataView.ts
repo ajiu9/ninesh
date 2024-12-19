@@ -21,7 +21,7 @@ export function getTasksData(args) {
 }
 
 function getWeekly(selector: any, args: any) {
-  function getTaskData(params: { selector: any; filterCb?: (item: any) => boolean; args?: any }) {
+  function getTaskData(params: { selector: any, filterCb?: (item: any) => boolean, args?: any }) {
     const data = `\`\`\`dataviewjs\n
     ${getFormatWeeklyTask.toString()}\n
     ${getWeeklyTasks.toString()}\n

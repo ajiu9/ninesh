@@ -1,6 +1,0 @@
-{
-  "extends": "@ajiu9",
-  "rules": {
-    "no-console": "off"
-  }
-}

@@ -2,7 +2,6 @@
   "name": "ninesh",
   "type": "module",
   "version": "0.0.1",
-  "private": "true",
   "description": "Ajiu9's daily shell",
   "author": "ajiu9",
   "license": "MIT",
@@ -19,13 +18,18 @@
     "obsidian",
     "zsh"
   ],
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "bin": "bin/cli.js",
+  "files": [
+    "bin",
+    "dist"
+  ],
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "tsup --format cjs,esm --dts --clean",
     "clean": "pnpm run clean:dist && pnpm run -r --parallel clean",
     "clean:dist": "rimraf dist",
     "clean:obsiflow": "pnpm -C packages/obsiflow clean",
-    "lint": "eslint . --fix",
+    "lint": "eslint --flag unstable_ts_config . --fix",
     "check": "tsc --incremental --noEmit",
     "prepare": "simple-git-hooks",
     "test": "pnpm build && pnpm -C packages/obsiflow test"
@@ -34,13 +38,14 @@
     "cac": "^6.7.14"
   },
   "devDependencies": {
-    "@ajiu9/eslint-config": "^1.0.3",
+    "@ajiu9/eslint-config": "2.5.0",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/node": "^22.1.0",
     "consola": "^3.2.3",
-    "eslint": "^8.49.0",
+    "eslint": "^9.10.0",
+    "jiti": "^2.4.2",
     "lint-staged": "^15.2.7",
     "minimist": "^1.2.8",
     "picocolors": "^1.0.1",
@@ -49,6 +54,7 @@
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "simple-git-hooks": "^2.11.1",
+    "tsup": "^8.3.5",
     "tsx": "^4.16.5",
     "typescript": "^5.2.2"
   },

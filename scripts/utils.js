@@ -1,7 +1,7 @@
+import { spawn } from 'node:child_process'
 // @ts-check
 import fs from 'node:fs'
 import { createRequire } from 'node:module'
-import { spawn } from 'node:child_process'
 
 const require = createRequire(import.meta.url)
 

@@ -5,7 +5,6 @@ WHERE completed = false
 SORT due DESC
 ```
 
-
 ```dataview
 TASK
 FROM #Plan/Weekly/2024

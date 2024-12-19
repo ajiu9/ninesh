@@ -1,11 +1,11 @@
 import { createRequire } from 'node:module'
-import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import pico from 'picocolors'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import polyfillNode from 'rollup-plugin-polyfill-node'
-import esbuild from 'rollup-plugin-esbuild'
+import { fileURLToPath } from 'node:url'
 import json from '@rollup/plugin-json'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import pico from 'picocolors'
+import esbuild from 'rollup-plugin-esbuild'
+import polyfillNode from 'rollup-plugin-polyfill-node'
 
 const require = createRequire(import.meta.url)
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
