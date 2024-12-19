@@ -1,21 +1,23 @@
 {
-  "name": "nine-shell",
+  "name": "ninesh",
   "type": "module",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": "true",
-  "description": "this is my shell",
+  "description": "Ajiu9's daily shell",
   "author": "ajiu9",
-  "license": "ISC",
-  "homepage": "https://github.com/ajiu9/shell#readme",
+  "license": "MIT",
+  "homepage": "https://github.com/ajiu9/ninesh#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ajiu9/shell.git"
+    "url": "git+https://github.com/ajiu9/ninesh.git"
   },
   "bugs": {
-    "url": "https://github.com/ajiu9/shell/issues"
+    "url": "https://github.com/ajiu9/ninesh/issues"
   },
   "keywords": [
-    "shell"
+    "shell",
+    "obsidian",
+    "zsh"
   ],
   "main": "index.js",
   "scripts": {

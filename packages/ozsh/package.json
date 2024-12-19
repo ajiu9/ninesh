@@ -20,7 +20,7 @@
   },
   "main": "dist/obsiflow.esm-bundler.js",
   "bin": {
-    "obsiflow": "bin/index.js"
+    "ozsh": "bin/index.js"
   },
   "files": [
     "bin",
