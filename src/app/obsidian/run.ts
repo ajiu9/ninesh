@@ -1,26 +1,21 @@
 import type { CurrentTimeType } from './utils/index'
 import { existsSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
-// import { parseArgs } from 'node:util'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { formatDate, getTasksData } from './utils/index'
 
 const uPath = process.env.HOME
-console.log('uPath:', uPath)
 const scopeUrl = fileURLToPath(new URL('.', import.meta.url))
 const require = createRequire(scopeUrl)
 const configDir = path.join(uPath as string, '.obsiflow')
 const resolve = (p: string) => path.resolve(configDir, p)
 const configPath = resolve('config.json')
 
-let config: { [x: string]: {
-  target: string
-  template?: string
-} }
+let config: { [key: string]: { target: string, template?: string } } = {}
 
-export async function run(argsOptions) {
+export async function run(argsOptions: { target: string, next?: boolean }) {
   const { target, ...args } = argsOptions
 
   await loadConfig()
@@ -28,6 +23,7 @@ export async function run(argsOptions) {
   const now = new Date()
   if (args.next && ['daily', 'saturday', 'sunday'].includes(target)) now.setDate(now.getDate() + 1)
   if (args.next && target === 'weekly') now.setDate(now.getDate() + 7)
+
   const currentTime: CurrentTimeType = formatDate(now)
   const nameEnum = {
     daily: 'time',
@@ -39,30 +35,31 @@ export async function run(argsOptions) {
   }
   const fileName = currentTime[nameEnum[target]]
   let targetTemplateData = ''
-  if (fileName === 'task')
-    targetTemplateData = getTasksData(args)
 
+  if (fileName === 'task')
+    targetTemplateData = getTasksData(args) || '' // Provide a default empty string
   else {
     let templateData = ''
     const templatePath = config[target]?.template
     if (templatePath)
       templateData = await readFile(templatePath, 'utf8')
+    else
+      throw new Error(`Template path for target "${target}" not found.`)
 
     targetTemplateData = getTargetTemplateData(templateData)
   }
 
-  console.log('name:', `${config[target].target}/${fileName}.md`)
   return writeFile(`${config[target].target}/${fileName}.md`, targetTemplateData)
+}
 
-  function getTargetTemplateData(data: string) {
-    if (target === 'weekly') {
-      const time = now
-      time.setDate(time.getDate() + 7)
-      const { week } = formatDate(time)
-      data = data.replace(/\{week\}/g, week)
-    }
-    return data
+function getTargetTemplateData(data: string): string {
+  if (target === 'weekly') {
+    const time = new Date(now)
+    time.setDate(time.getDate() + 7)
+    const { week } = formatDate(time)
+    data = data.replace(/\{week\}/g, week.toString()) // Ensure week is a string
   }
+  return data
 }
 
 async function loadConfig() {
@@ -94,6 +91,7 @@ async function loadConfig() {
       target: `${uPath}/Documents/Code/github.com/ajiu9/Notes/0-Inbox`,
     },
   }
+
   if (!exit)
     await writeFile(configPath, JSON.stringify(defaultConfig, null, 2))
 

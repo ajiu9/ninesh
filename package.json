@@ -19,7 +19,7 @@
     "zsh"
   ],
   "main": "./dist/index.js",
-  "bin": "./bin/index.js",
+  "bin": "./bin/index.cjs",
   "files": [
     "bin",
     "dist"
@@ -32,7 +32,8 @@
     "lint": "eslint --flag unstable_ts_config . --fix",
     "check": "tsc --incremental --noEmit",
     "prepare": "simple-git-hooks",
-    "test": "pnpm build && pnpm -C packages/obsiflow test"
+    "test": "pnpm build && pnpm -C packages/obsiflow test",
+    "dev": "pnpm build && pnpm link --global"
   },
   "dependencies": {
     "cac": "^6.7.14"
