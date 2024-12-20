@@ -10,12 +10,12 @@ import { pkgJson } from './constants'
 
 function header(): void {
   console.log('\n')
-  p.intro(`${c.green(`@antfu/eslint-config `)}${c.dim(`v${pkgJson.version}`)}`)
+  p.intro(`${c.green(`ninesh `)}${c.dim(`v${pkgJson.version}`)}`)
 }
 
 const instance = yargs(hideBin(process.argv))
-  .scriptName('@antfu/eslint-config')
-  .usage('')
+  .scriptName('ninesh')
+  .usage('Usage: $0 <command> [options]')
   .command(
     '*',
     'Run the initialization or migration',
