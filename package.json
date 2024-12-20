@@ -36,7 +36,9 @@
     "dev": "pnpm build && pnpm link --global"
   },
   "dependencies": {
-    "cac": "^6.7.14"
+    "@clack/prompts": "^0.9.0",
+    "cac": "^6.7.14",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@ajiu9/eslint-config": "2.5.0",
@@ -44,6 +46,8 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/node": "^22.1.0",
+    "@types/prompts": "^2.4.9",
+    "@types/yargs": "^17.0.33",
     "consola": "^3.2.3",
     "eslint": "^9.10.0",
     "jiti": "^2.4.2",

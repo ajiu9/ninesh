@@ -1,3 +1,4 @@
+/* eslint-disable node/prefer-global/process */
 import type { CurrentTimeType } from './utils/index'
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
@@ -13,9 +14,12 @@ const configDir = path.join(uPath as string, '.obsiflow')
 const resolve = (p: string) => path.resolve(configDir, p)
 const configPath = resolve('config.json')
 
-let config: { [key: string]: { target: string, template?: string } } = {}
+let config: { [x: string]: {
+  target: string
+  template?: string
+} }
 
-export async function run(argsOptions: { target: string, next?: boolean }) {
+export async function run(argsOptions) {
   const { target, ...args } = argsOptions
 
   await loadConfig()
@@ -23,7 +27,6 @@ export async function run(argsOptions: { target: string, next?: boolean }) {
   const now = new Date()
   if (args.next && ['daily', 'saturday', 'sunday'].includes(target)) now.setDate(now.getDate() + 1)
   if (args.next && target === 'weekly') now.setDate(now.getDate() + 7)
-
   const currentTime: CurrentTimeType = formatDate(now)
   const nameEnum = {
     daily: 'time',
@@ -42,24 +45,22 @@ export async function run(argsOptions: { target: string, next?: boolean }) {
     let templateData = ''
     const templatePath = config[target]?.template
     if (templatePath)
-      templateData = await readFile(templatePath, 'utf8')
-    else
-      throw new Error(`Template path for target "${target}" not found.`)
+      templateData = (await readFile(templatePath, 'utf8')) as string
 
     targetTemplateData = getTargetTemplateData(templateData)
   }
 
   return writeFile(`${config[target].target}/${fileName}.md`, targetTemplateData)
-}
 
-function getTargetTemplateData(data: string): string {
-  if (target === 'weekly') {
-    const time = new Date(now)
-    time.setDate(time.getDate() + 7)
-    const { week } = formatDate(time)
-    data = data.replace(/\{week\}/g, week.toString()) // Ensure week is a string
+  function getTargetTemplateData(data: string): string {
+    if (target === 'weekly') {
+      const time = new Date(now)
+      time.setDate(time.getDate() + 7)
+      const { week } = formatDate(time)
+      data = data.replace(/\{week\}/g, String(week))
+    }
+    return data
   }
-  return data
 }
 
 async function loadConfig() {
@@ -91,7 +92,6 @@ async function loadConfig() {
       target: `${uPath}/Documents/Code/github.com/ajiu9/Notes/0-Inbox`,
     },
   }
-
   if (!exit)
     await writeFile(configPath, JSON.stringify(defaultConfig, null, 2))
 

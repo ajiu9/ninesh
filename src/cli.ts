@@ -1,6 +1,7 @@
 /**
  * ninesh o -w
  */
-import { main as obsidian } from './app/obsidian'
+// import { main as obsidian } from './app/obsidian'
 
-obsidian()
+// obsidian()
+export * from './cli/index'
