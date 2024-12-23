@@ -6,6 +6,7 @@ import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 
 import { run as obsidianRun } from '../app/obsidian/run'
+import { run as zshRun } from '../app/zsh/run'
 import { pkgJson } from './constants'
 
 function header(): void {

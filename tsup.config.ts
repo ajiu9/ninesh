@@ -1,9 +1,9 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: [
-    'src/index.ts',
-    'src/cli.ts',
-  ],
-  shims: true
+  entry: {
+    'obsidian/index': 'src/index.ts',
+    'obsidian/cli': 'src/cli.ts',
+  },
+  shims: true,
 })
