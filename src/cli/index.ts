@@ -2,10 +2,10 @@ import process from 'node:process'
 import * as p from '@clack/prompts'
 import c from 'picocolors'
 import yargs from 'yargs'
+
 import { hideBin } from 'yargs/helpers'
 
 import { run as obsidianRun } from '../app/obsidian/run'
-
 import { pkgJson } from './constants'
 
 function header(): void {
@@ -16,18 +16,14 @@ const instance = yargs(hideBin(process.argv))
   .scriptName('ninesh')
   .usage('Usage: $0 [-v | --version] [-h | --help] <command> [<args>]')
   .epilog(`
-  These are common Ninesh commands used in various situations:
+These are common Ninesh commands used in various situations:
 
-  Obsidian plugin (see also:  ninesh obsidian help)
-    obsidian     Genarate Obsidian template
+Obsidian plugin (see also:  ninesh obsidian help)
+  obsidian     Genarate Obsidian template
 
-  For more information on a specific command, run:
-    ninesh help <command>
-`)
-  .showHelpOnFail(false)
-  .alias('h', 'help')
-  .version('version', `${pkgJson.name} ${pkgJson.version}`)
-  .alias('v', 'version')
+For more information on a specific command, run:
+  ninesh help <command>
+  `)
   .command(
     'obsidian [options]',
     'Obsidian plugin, Genarate Obsidian template(see also: ninesh obsidian help)',
@@ -71,6 +67,24 @@ const instance = yargs(hideBin(process.argv))
       }
     },
   )
+  .showHelpOnFail(false)
+  .help(false)
+  .version(false)
+  .alias('h', 'help')
+  .option('help', {
+    alias: 'h',
+    describe: 'Show help',
+    type: 'boolean',
+    hidden: true,
+  })
+  .version('version', `${pkgJson.name} ${pkgJson.version}`)
+  // .alias('v', 'version')
+  .option('version', {
+    alias: 'v',
+    describe: 'Show version number',
+    type: 'boolean',
+    hidden: true,
+  })
 
 // eslint-disable-next-line ts/no-unused-expressions
 instance
