@@ -20,7 +20,19 @@ let config: { [x: string]: {
 } }
 
 export async function run(argsOptions) {
-  const { target, ...args } = argsOptions
+  const { _, $0, ...params } = argsOptions
+  const targetMap = ['empty', 'task', 'daily', 'weekly']
+  const paramsKeys = Object.keys(params)
+
+  let target = 'empty'
+  if (paramsKeys.length === 0)
+    target = 'empty'
+  else if (paramsKeys.length === 1)
+    target = paramsKeys[0]
+  else if (paramsKeys.length > 1)
+    target = paramsKeys.find(key => targetMap.includes(key)) || 'empty'
+
+  const { ...args } = argsOptions
 
   await loadConfig()
 
@@ -50,7 +62,9 @@ export async function run(argsOptions) {
     targetTemplateData = getTargetTemplateData(templateData)
   }
 
-  return writeFile(`${config[target].target}/${fileName}.md`, targetTemplateData)
+  return writeFile(`${config[target].target}/${fileName}.md`, targetTemplateData).then(() => {
+    console.log('Generate file path:', `${config[target].target}/${fileName}.md`)
+  })
 
   function getTargetTemplateData(data: string): string {
     if (target === 'weekly') {

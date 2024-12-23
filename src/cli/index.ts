@@ -1,59 +1,76 @@
 import process from 'node:process'
-
 import * as p from '@clack/prompts'
 import c from 'picocolors'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 
+import { run as obsidianRun } from '../app/obsidian/run'
+
 import { pkgJson } from './constants'
-// import { run } from './run'
 
 function header(): void {
-  console.log('\n')
   p.intro(`${c.green(`ninesh `)}${c.dim(`v${pkgJson.version}`)}`)
 }
 
 const instance = yargs(hideBin(process.argv))
   .scriptName('ninesh')
-  .usage('Usage: $0 <command> [options]')
+  .usage('Usage: $0 [-v | --version] [-h | --help] <command> [<args>]')
+  .epilog(`
+  These are common Ninesh commands used in various situations:
+
+  Obsidian plugin (see also:  ninesh obsidian help)
+    obsidian     Genarate Obsidian template
+
+  For more information on a specific command, run:
+    ninesh help <command>
+`)
+  .showHelpOnFail(false)
+  .alias('h', 'help')
+  .version('version', `${pkgJson.name} ${pkgJson.version}`)
+  .alias('v', 'version')
   .command(
-    '*',
-    'Run the initialization or migration',
+    'obsidian [options]',
+    'Obsidian plugin, Genarate Obsidian template(see also: ninesh obsidian help)',
     args => args
-      .option('yes', {
-        alias: 'y',
-        description: 'Skip prompts and use default values',
+      .option('daily', {
+        alias: 'd',
+        describe: 'Generate daily plan template',
         type: 'boolean',
       })
-      .option('template', {
-        alias: 't',
-        description: 'Use the framework template for optimal customization: vue / react / svelte / astro',
-        type: 'string',
+      .option('weekly', {
+        alias: 'w',
+        describe: 'Generate weekly plan template',
+        type: 'boolean',
       })
-      .option('extra', {
+      .option('empty', {
         alias: 'e',
-        array: true,
-        description: 'Use the extra utils: formatter / perfectionist / unocss',
+        describe: 'Generate empty template',
+        type: 'boolean',
+      })
+      .option('task', {
+        alias: 't',
+        describe: 'Generate daily plan template',
         type: 'string',
+        choices: ['weekly', 'yearly'],
+      })
+      .option('next', {
+        alias: 'n',
+        describe: 'Generate daily plan template',
+        type: 'boolean',
       })
       .help(),
     async (args) => {
       header()
       try {
-        console.log('run: ', args)
-        // await run(args)
+        await obsidianRun(args)
       }
       catch (error) {
-        p.log.error(c.inverse(c.red(' Failed to migrate ')))
+        p.log.error(c.inverse(c.red(' Failed to clone ')))
         p.log.error(c.red(`✘ ${String(error)}`))
         process.exit(1)
       }
     },
   )
-  .showHelpOnFail(false)
-  .alias('h', 'help')
-  .version('version', pkgJson.version)
-  .alias('v', 'version')
 
 // eslint-disable-next-line ts/no-unused-expressions
 instance

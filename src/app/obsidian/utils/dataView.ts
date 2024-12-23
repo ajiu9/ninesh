@@ -12,11 +12,12 @@ export interface taskItem {
 }
 
 export function getTasksData(args) {
-  if (args.weekly) {
+  const { task } = args
+  if (task === 'weekly') {
     const s = args.s || `${new Date().getFullYear()}-W-${getWeek(new Date())}.md`
     return getWeekly(s, args)
   }
-  if (args.yearly)
+  if (task === 'yearly')
     return getYearly(args.s || `#Plan/Weekly/${new Date().getFullYear()}`)
 }
 
