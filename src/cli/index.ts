@@ -68,24 +68,32 @@ For more information on a specific command, run:
       }
     },
   )
+  .command(
+    'zsh [options]',
+    'Add common zsh plugins, customize zsh config for git',
+    args => args
+      .option('init', {
+        alias: 'i',
+        describe: 'init zsh plugins',
+        type: 'boolean',
+      })
+      .help(),
+    async (args) => {
+      header()
+      try {
+        await zshRun(args)
+      }
+      catch (error) {
+        p.log.error(c.inverse(c.red(' Failed to clone ')))
+        p.log.error(c.red(`✘ ${String(error)}`))
+        process.exit(1)
+      }
+    },
+  )
   .showHelpOnFail(false)
-  .help(false)
-  .version(false)
   .alias('h', 'help')
-  .option('help', {
-    alias: 'h',
-    describe: 'Show help',
-    type: 'boolean',
-    hidden: true,
-  })
   .version('version', `${pkgJson.name} ${pkgJson.version}`)
-  // .alias('v', 'version')
-  .option('version', {
-    alias: 'v',
-    describe: 'Show version number',
-    type: 'boolean',
-    hidden: true,
-  })
+  .alias('v', 'version')
 
 // eslint-disable-next-line ts/no-unused-expressions
 instance

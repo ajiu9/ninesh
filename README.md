@@ -8,6 +8,7 @@ This package is a generate template for [Obsidian](https://obsidian.md)
 
 - Generate daily/weekly/empty template for Obsidian
 - Statistical weekly tasks or year tasks
+- Add common zsh plugins
 
 ## Install
 ```shell
