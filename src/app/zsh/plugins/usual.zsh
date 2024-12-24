@@ -33,8 +33,10 @@ alias ll="ls -alhG"
 alias ls="ls -G"
 
 # npm
-alias nmir="npm config set registry https://registry.npmmirror.com/ --global"
-alias numir="npm config set registry https://registry.npmjs.org/ --global"
+alias npmmg="npm config set registry https://registry.npmmirror.com/ --global"
+alias npmmsg="npm config set registry https://registry.npmjs.org/ --global"
+alias npmm="npm config set registry https://registry.npmmirror.com/"
+alias npmms="npm config set registry https://registry.npmjs.org/"
 
 function movie() {
   NOW=$(date +"%y%m%d%H%M%S");
