@@ -33,6 +33,7 @@ alias ll="ls -alhG"
 alias ls="ls -G"
 
 # npm
+alias npmreg="npm config get registry"
 alias npmmg="npm config set registry https://registry.npmmirror.com/ --global"
 alias npmmsg="npm config set registry https://registry.npmjs.org/ --global"
 alias npmm="npm config set registry https://registry.npmmirror.com/"
