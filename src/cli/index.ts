@@ -22,6 +22,9 @@ These are common Ninesh commands used in various situations:
 Obsidian plugin (see also:  ninesh obsidian help)
   obsidian     Genarate Obsidian template
 
+Init zsh plugin (see also:  ninesh init help)
+  init          Add common zsh plugins, customize zsh config
+
 For more information on a specific command, run:
   ninesh help <command>
   `)
@@ -62,31 +65,33 @@ For more information on a specific command, run:
         await obsidianRun(args)
       }
       catch (error) {
-        p.log.error(c.inverse(c.red(' Failed to clone ')))
-        p.log.error(c.red(`✘ ${String(error)}`))
-        process.exit(1)
+        handleError(error)
       }
     },
   )
   .command(
-    'zsh [options]',
-    'Add common zsh plugins, customize zsh config for git',
+    'init [options]',
+    'Add common zsh plugins, customize zsh config',
     args => args
-      .option('init', {
-        alias: 'i',
-        describe: 'init zsh plugins',
+      .option('zsh', {
+        alias: 'z',
+        describe: 'Add common zsh plugins to ~/.zshrc',
+        type: 'boolean',
+      })
+      .option('omz', {
+        alias: 'o',
+        describe: 'Add o-my-zsh plugins to ~/.zshrc',
         type: 'boolean',
       })
       .help(),
     async (args) => {
       header()
       try {
+        console.log(args)
         await zshRun(args)
       }
       catch (error) {
-        p.log.error(c.inverse(c.red(' Failed to clone ')))
-        p.log.error(c.red(`✘ ${String(error)}`))
-        process.exit(1)
+        handleError(error)
       }
     },
   )
@@ -99,3 +104,9 @@ For more information on a specific command, run:
 instance
   .help()
   .argv
+
+function handleError(error: unknown) {
+  p.log.error(c.inverse(c.red(' Failed to clone ')))
+  p.log.error(c.red(`✘ ${String(error)}`))
+  process.exit(1)
+}

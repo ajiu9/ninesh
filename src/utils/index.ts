@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process'
 
-export function pushStringToZsh(cmdStr: string): boolean {
+export async function pushStringToZsh(cmdStr: string) {
   try {
     execSync(`echo ${cmdStr} >> ~/.zshrc`)
     return true

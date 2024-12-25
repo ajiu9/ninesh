@@ -14,6 +14,12 @@ importers:
       cac:
         specifier: ^6.7.14
         version: 6.7.14
+      fs-extra:
+        specifier: ^11.2.0
+        version: 11.2.0
+      picocolors:
+        specifier: ^1.1.1
+        version: 1.1.1
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -51,9 +57,6 @@ importers:
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.2
-      fs-extra:
-        specifier: ^11.2.0
-        version: 11.2.0
       jiti:
         specifier: ^2.4.2
         version: 2.4.2
@@ -63,9 +66,6 @@ importers:
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
-      picocolors:
-        specifier: ^1.0.1
-        version: 1.1.1
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -2241,7 +2241,7 @@ packages:
       graceful-fs: 4.2.11
       jsonfile: 6.1.0
       universalify: 2.0.1
-    dev: true
+    dev: false
 
   /fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -2334,7 +2334,6 @@ packages:
 
   /graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
-    dev: true
 
   /graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
@@ -2499,7 +2498,7 @@ packages:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
-    dev: true
+    dev: false
 
   /keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -3777,7 +3776,7 @@ packages:
   /universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
-    dev: true
+    dev: false
 
   /uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}

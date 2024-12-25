@@ -32,6 +32,7 @@
     "clean:obsiflow": "pnpm -C packages/obsiflow clean",
     "lint": "eslint --flag unstable_ts_config . --fix",
     "check": "tsc --incremental --noEmit",
+    "picocolors": "^1.0.1",
     "prepare": "simple-git-hooks",
     "test": "pnpm build && pnpm -C packages/obsiflow test",
     "dev": "pnpm build && pnpm link --global",
@@ -40,6 +41,8 @@
   "dependencies": {
     "@clack/prompts": "^0.9.0",
     "cac": "^6.7.14",
+    "fs-extra": "^11.2.0",
+    "picocolors": "^1.1.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -54,11 +57,9 @@
     "consola": "^3.2.3",
     "eslint": "^9.10.0",
     "fast-glob": "^3.3.2",
-    "fs-extra": "^11.2.0",
     "jiti": "^2.4.2",
     "lint-staged": "^15.2.7",
     "minimist": "^1.2.8",
-    "picocolors": "^1.0.1",
     "rimraf": "^6.0.1",
     "rollup": "^4.19.2",
     "rollup-plugin-esbuild": "^6.1.1",
