@@ -20,13 +20,13 @@ export async function run(args: ArgumentsCamelCase) {
   const zshDir = path.resolve(__dirname, 'plugins/zsh')
 
   if (args.zsh) {
-    const commandStr = `source ${zshDir}/index.zsh`
-    const included = await zshIncludesString(commandStr)
-    if (included) return
-
-    await pushStringToZshAndLog(commandStr)
+    await execCommand('custom zsh', `source ${zshDir}/index.zsh`)
     return
   }
+
+  if (args.starship)
+    await execCommand('starship', `eval "$(starship init zsh)"`)
+
   if (args.omz) {
     const plugins = {
       'zsh-autosuggestions': 'https://github.com/zsh-users/zsh-autosuggestions',
@@ -35,16 +35,6 @@ export async function run(args: ArgumentsCamelCase) {
     }
     for (const plugin of Object.entries(plugins) as [string, string][])
       await runOmz(plugin)
-    return
-  }
-
-  if (args.starship) {
-    const commandStr = `eval "$(starship init zsh)"`
-    const markerItem = marker('starship')
-    const blockCommandStr = `\r\'${markerItem}\\n${commandStr}\\n${markerItem}\\n'`
-    await removeStringBlock('starship')
-
-    await pushStringToZshAndLog(String(blockCommandStr))
   }
 
   async function runOmz(plugin: [string, string]) {
@@ -75,20 +65,12 @@ export async function run(args: ArgumentsCamelCase) {
       process.exit(1)
     }
 
-    const commandStr = `source ${pluginPath}/${pluginName}.plugin.zsh`
-    const included = await zshIncludesString(commandStr)
-    if (included) return
-
-    pushStringToZshAndLog(commandStr)
+    await execCommand(pluginName, `source ${pluginPath}/${pluginName}.plugin.zsh`)
   }
 
-  async function zshIncludesString(searchString: string) {
-    const zshContext = await fsp.readFile(zshrcPath, 'utf-8')
-    const included = zshContext.includes(searchString)
-    if (included)
-      p.log.step(c.cyan(`Zsh config existing: ${searchString}`))
-
-    return included
+  async function execCommand(name: string, command: string) {
+    await removeStringBlock(name)
+    await pushStringToZshAndLog(String(blockCommandStr(name, command)))
   }
 
   async function pushStringToZshAndLog(cmdStr: string) {
@@ -99,6 +81,11 @@ export async function run(args: ArgumentsCamelCase) {
   function marker(name: string) {
     const marker = `\# <<< ${name} initialize <<<`
     return marker
+  }
+
+  function blockCommandStr(name: string, command: string) {
+    const markerItem = marker(name)
+    return `\r\r\'${markerItem}\\r${command}\\n${markerItem}\\n'`
   }
 
   async function removeStringBlock(name: string) {
