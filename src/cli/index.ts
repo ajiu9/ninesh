@@ -83,11 +83,15 @@ For more information on a specific command, run:
         describe: 'Add o-my-zsh plugins to ~/.zshrc',
         type: 'boolean',
       })
+      .option('starship', {
+        alias: 's',
+        describe: 'Add zsh theme starship plugins to ~/.zshrc',
+        type: 'boolean',
+      })
       .help(),
     async (args) => {
       header()
       try {
-        console.log(args)
         await zshRun(args)
       }
       catch (error) {

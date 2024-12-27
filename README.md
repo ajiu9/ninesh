@@ -1,4 +1,4 @@
-# obsiflow
+# Ninesh
 
 This package is a generate template for [Obsidian](https://obsidian.md)
 

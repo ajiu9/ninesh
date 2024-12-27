@@ -15,7 +15,7 @@ import { pushStringToZsh } from '../../utils'
 const _homeDir = homedir()
 const zshrcPath = path.join(_homeDir, '.zshrc')
 
-export async function run(args: ArgumentsCamelCase<{ zsh: boolean | undefined }>) {
+export async function run(args: ArgumentsCamelCase) {
   const __dirname = fileURLToPath(new URL('.', import.meta.url))
   const zshDir = path.resolve(__dirname, 'plugins/zsh')
 
@@ -35,6 +35,16 @@ export async function run(args: ArgumentsCamelCase<{ zsh: boolean | undefined }>
     }
     for (const plugin of Object.entries(plugins) as [string, string][])
       await runOmz(plugin)
+    return
+  }
+
+  if (args.starship) {
+    const commandStr = `eval "$(starship init zsh)"`
+    const markerItem = marker('starship')
+    const blockCommandStr = `\r\'${markerItem}\\n${commandStr}\\n${markerItem}\\n'`
+    await removeStringBlock('starship')
+
+    await pushStringToZshAndLog(String(blockCommandStr))
   }
 
   async function runOmz(plugin: [string, string]) {
@@ -84,5 +94,26 @@ export async function run(args: ArgumentsCamelCase<{ zsh: boolean | undefined }>
   async function pushStringToZshAndLog(cmdStr: string) {
     await pushStringToZsh(cmdStr)
     p.log.success(c.green(`Added ${cmdStr} to ${zshrcPath}`))
+  }
+
+  function marker(name: string) {
+    const marker = `\# <<< ${name} initialize <<<`
+    return marker
+  }
+
+  async function removeStringBlock(name: string) {
+    try {
+      let zshrcContent = await fsp.readFile(zshrcPath, 'utf-8')
+
+      const startMarker = `# <<< ${name} initialize <<<`
+      const endMarker = `# <<< ${name} initialize <<<`
+      const regex = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`, 'g')
+      zshrcContent = zshrcContent.replace(regex, '').trim()
+
+      await fs.promises.writeFile(zshrcPath, zshrcContent, 'utf-8')
+    }
+    catch (err) {
+      console.error(err)
+    }
   }
 }
