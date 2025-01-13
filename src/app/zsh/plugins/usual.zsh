@@ -8,7 +8,6 @@ alias br="bun run"
 alias c='code .'
 alias y='yarn'
 alias p='pnpm'
-alias pr=='pnpm run'
 alias pi="echo 'Pinging Baidu' && ping www.baidu.com"
 alias ip="ipconfig getifaddr en0 && ipconfig getifaddr en1"
 alias cip="curl cip.cc"
