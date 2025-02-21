@@ -3,7 +3,11 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
+import * as p from '@clack/prompts'
+import c from 'picocolors'
 import { rootPath, uPath } from '../../constants'
+
+p.intro(`${c.green(`nineshqqq `)}`)
 
 const configPath = path.join(rootPath, 'config.json')
 
