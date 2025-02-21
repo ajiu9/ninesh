@@ -20,12 +20,29 @@ Commands:
 
   - `ninesh obsidian [options]`  Obsidian plugin, Genarate Obsidian template(see also: ninesh obsidian help)
   - `ninesh init [options]`      Add common zsh plugins, customize zsh config
+  - `ninesh add [options]`  Manage repository easily
 
 Init zsh plugin (see also:  ninesh init help)
   - `init`          Add common zsh plugins, customize zsh config
 
 For more information on a specific command, run:
   - `ninesh help <command>`
+
+## Manage repository
+$ ninesh add [options]
+
+- Add repository to $BASE/[github.com|gitlab.com|...]/you-project
+
+provide a structure making it easy
+```
+$BASE
+|- github.com
+|  `- popomore
+|     `- ninesh
+`- gitlab.com
+   `- popomore
+      `- ninesh
+```
 
 ## Generate Obsidian template
 

@@ -6,6 +6,7 @@ import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 
 import { run as obsidianRun } from '../app/obsidian/run'
+import { run as projectRun } from '../app/project/run'
 import { run as zshRun } from '../app/zsh/run'
 import { pkgJson } from './constants'
 
@@ -93,6 +94,24 @@ For more information on a specific command, run:
       header()
       try {
         await zshRun(args)
+      }
+      catch (error) {
+        handleError(error)
+      }
+    },
+  )
+  .command(
+    'add <path>',
+    'Add a new repository to you directory',
+    (yargs: any) => {
+      return yargs.positional('path', {
+        describe: 'Add a new repository to you directory',
+      })
+    },
+    async (args) => {
+      header()
+      try {
+        await projectRun(args)
       }
       catch (error) {
         handleError(error)

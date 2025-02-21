@@ -4,6 +4,7 @@ import fs from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { cpus } from 'node:os'
 import path from 'node:path'
+import process from 'node:process'
 import { parseArgs } from 'node:util'
 import minimist from 'minimist'
 import { targets as allTargets, exec } from './utils.js'
@@ -16,7 +17,7 @@ const commit = spawnSync('git', ['rev-parse', '--short=7', 'HEAD'])
 const args = minimist(process.argv.slice(2))
 
 const sourceMap = args.sourcemap || args.s
-const { values, positionals: targets } = parseArgs({
+const { positionals: targets } = parseArgs({
   allowPositionals: true,
   options: {
     formats: {
@@ -43,9 +44,6 @@ const { values, positionals: targets } = parseArgs({
     },
   },
 })
-
-console.log('values: ', values)
-console.log('targets: ', targets)
 
 run()
 

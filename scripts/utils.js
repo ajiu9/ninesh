@@ -1,7 +1,9 @@
+import { Buffer } from 'node:buffer'
 import { spawn } from 'node:child_process'
 // @ts-check
 import fs from 'node:fs'
 import { createRequire } from 'node:module'
+import process from 'node:process'
 
 const require = createRequire(import.meta.url)
 
@@ -57,7 +59,6 @@ export async function exec(command, args, options) {
 
     _process.on('exit', (code) => {
       const ok = code === 0
-      /* eslint n/prefer-global/buffer: [error] */
       const stderr = Buffer.concat(stderrChunks).toString().trim()
       const stdout = Buffer.concat(stdoutChunks).toString().trim()
 

@@ -1,9 +1,10 @@
-/* eslint-disable node/prefer-global/process */
+import type { ArgumentsCamelCase } from 'yargs'
 import type { CurrentTimeType } from './utils/index'
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import path from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { formatDate, getTasksData } from './utils/index'
 
@@ -19,7 +20,7 @@ let config: { [x: string]: {
   template?: string
 } }
 
-export async function run(argsOptions) {
+export async function run(argsOptions: ArgumentsCamelCase) {
   const { _, $0, ...params } = argsOptions
   const targetMap = ['empty', 'task', 'daily', 'weekly']
   const paramsKeys = Object.keys(params)
