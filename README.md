@@ -46,7 +46,7 @@ $BASE
 
 ## Generate Obsidian template
 
-$ ninesh obsiflow [options]
+$ ninesh obsidian [options]
 
   - -v, --version            Display version number
   - -d, --daily              Generate daily plan template
@@ -57,14 +57,14 @@ $ ninesh obsiflow [options]
   - -q, --quiet              Quiet mode
   - -v, --version <version>  Target version
 
-$ ninesh obsiflow -d
+$ ninesh obsidian -d
 
 ![obsiflow-daily.png](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-daily.png)
 
-$ ninesh obsiflow -w
+$ ninesh obsidian -w
 ![obsiflow-weekly.png](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-weekly.png)
 
-$ ninesh obsiflow -t -w
+$ ninesh obsidian -t -w
 ![obsiflow-task-weekly.png](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-task-weekly.png)
 
 [npm-image]: https://img.shields.io/npm/v/ninesh.svg?style=flat-square

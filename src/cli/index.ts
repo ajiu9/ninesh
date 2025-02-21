@@ -8,7 +8,7 @@ import { hideBin } from 'yargs/helpers'
 import { run as obsidianRun } from '../app/obsidian/run'
 import { run as projectRun } from '../app/project/run'
 import { run as zshRun } from '../app/zsh/run'
-import { pkgJson } from './constants'
+import { pkgJson } from '../constants'
 
 function header(): void {
   p.intro(`${c.green(`ninesh `)}${c.dim(`v${pkgJson.version}`)}`)

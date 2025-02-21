@@ -16,9 +16,10 @@
   "keywords": [
     "shell",
     "obsidian",
-    "zsh"
+    "zsh",
+    "git",
+    "repository"
   ],
-  "main": "./dist/index.js",
   "bin": "./bin/index.cjs",
   "files": [
     "bin",
@@ -31,12 +32,12 @@
     "build:zsh": "tsx ./src/app/zsh/scripts/build.ts",
     "clean": "pnpm run clean:dist && pnpm run -r --parallel clean",
     "clean:dist": "rimraf dist",
-    "clean:obsiflow": "pnpm -C packages/obsiflow clean",
+    "clean:obsidian": "pnpm -C packages/obsidian clean",
     "lint": "eslint --flag unstable_ts_config . --fix",
     "check": "tsc --incremental --noEmit",
     "picocolors": "^1.0.1",
     "prepare": "simple-git-hooks",
-    "test": "pnpm build && pnpm -C packages/obsiflow test",
+    "test": "pnpm build && pnpm -C packages/obsidian test",
     "dev": "pnpm build && pnpm link --global",
     "start": "tsx ./src/cli.ts"
   },

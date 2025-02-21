@@ -4,14 +4,13 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import path from 'node:path'
-import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { rootPath, uPath } from '../../constants'
 import { formatDate, getTasksData } from './utils/index'
 
-const uPath = process.env.HOME
 const scopeUrl = fileURLToPath(new URL('.', import.meta.url))
 const require = createRequire(scopeUrl)
-const configDir = path.join(uPath as string, '.obsiflow')
+const configDir = path.join(rootPath as string, '.obsidian')
 const resolve = (p: string) => path.resolve(configDir, p)
 const configPath = resolve('config.json')
 
@@ -79,7 +78,7 @@ export async function run(argsOptions: ArgumentsCamelCase) {
 }
 
 async function loadConfig() {
-  if (!existsSync(configDir)) await mkdir(configDir)
+  if (!existsSync(configDir)) await mkdir(configDir, { recursive: true })
 
   const exit = existsSync(configPath)
 
