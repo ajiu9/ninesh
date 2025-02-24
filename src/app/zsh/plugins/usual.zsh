@@ -14,6 +14,12 @@ alias cip="curl cip.cc"
 alias hosts="vi /etc/hosts"
 alias cdtemp="cd `mktemp -d /tmp/ajiu9-XXXXXX`"
 
+# ninesh
+alias n="ninesh"
+alias na="ninesh add"
+alias no="ninesh obsidian"
+alias ni="ninesh init"
+
 # Proxy
 alias proxy='export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890'
 alias unproxy='unset https_proxy http_proxy all_proxy'
