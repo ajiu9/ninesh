@@ -5,11 +5,11 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import * as p from '@clack/prompts'
-import clipboardy from 'clipboardy'
 import { parseGitUrl } from 'comuse-shared'
 import { execa } from 'execa'
 import c from 'picocolors'
 import { rootPath, uPath } from '../../constants'
+import { clipboard } from '../../utils'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -46,7 +46,7 @@ async function init(pathArg: string) {
 
   if (await existsSync(targetPath)) {
     p.log.info(c.cyan(`${targetPath} already exist`))
-    await clipboardy.write(`cd ${targetPath}`)
+    await clipboard.write(`cd ${targetPath}`)
     p.log.info(`${c.green('📋  Copied to clipboard')}, just use Ctrl+V`)
     p.log.info(c.green(`${targetPath} already exist`))
   }
@@ -70,7 +70,7 @@ async function init(pathArg: string) {
       { env, stdio: 'inherit' },
     )
 
-    await clipboardy.write(`cd ${targetPath}`)
+    await clipboard.write(`cd ${targetPath}`)
     p.log.info(`${c.green('📋  Copied to clipboard')}, just use Ctrl+V`)
   }
   catch (e) {
