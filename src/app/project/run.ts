@@ -58,7 +58,7 @@ async function init(pathArg: string) {
     // TODO
     // support window system
     const env = Object.assign({
-      GIT_SSH: path.join(__dirname, '../../utils/ssh.ts'),
+      GIT_SSH: path.join(__dirname, '/command/ssh.js'),
     }, process.env)
 
     await execa('git',

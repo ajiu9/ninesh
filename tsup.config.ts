@@ -1,8 +1,9 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: [
-    'src/cli.ts',
-  ],
+  entry: {
+    'cli': 'src/cli.ts',
+    'command/ssh': 'src/command/ssh.ts',
+  },
   shims: true,
 })
