@@ -5,11 +5,11 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import * as p from '@clack/prompts'
+import { clipboard } from 'clipboard-n'
 import { parseGitUrl } from 'comuse-shared'
 import { execa } from 'execa'
 import c from 'picocolors'
 import { rootPath, uPath } from '../../constants'
-import { clipboard } from '../../utils'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
