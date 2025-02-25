@@ -24,6 +24,17 @@ export async function run(args: ArgumentsCamelCase) {
     return
   }
 
+  if (args.ninesh) {
+    await execCommand('custom ninesh',
+      `
+alias n="ninesh"\\r
+alias na="ninesh add"\\r
+alias no="ninesh obsidian"\\r
+alias ni="ninesh init"`,
+    )
+    return
+  }
+
   if (args.starship)
     await execCommand('starship', `eval "$(starship init zsh)"`)
 

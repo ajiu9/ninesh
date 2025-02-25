@@ -89,6 +89,11 @@ For more information on a specific command, run:
         describe: 'Add zsh theme starship plugins to ~/.zshrc',
         type: 'boolean',
       })
+      .option('ninesh', {
+        alias: 'n',
+        describe: 'Add common ninesh plugins to ~/.zshrc',
+        type: 'boolean',
+      })
       .help(),
     async (args) => {
       header()
