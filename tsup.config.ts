@@ -6,4 +6,5 @@ export default defineConfig({
     'command/ssh': 'src/command/ssh.ts',
   },
   shims: true,
+  format: ['esm'],
 })

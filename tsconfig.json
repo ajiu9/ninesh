@@ -1,26 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "jsx": "preserve",
-    "lib": ["esnext", "dom"],
-    "useDefineForClassFields": false,
-    "experimentalDecorators": true,
     "baseUrl": ".",
-    "rootDir": ".",
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "paths": {},
-    "resolveJsonModule": true,
-    "types": ["node"],
-    "allowJs": false,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "strict": true,
-    "noUnusedLocals": true,
-    "newLine": "LF",
-    "outDir": "temp",
-    "removeComments": false,
-    "sourceMap": false,
     "esModuleInterop": true,
-    "isolatedModules": true,
     "skipLibCheck": true
   },
   "include": [

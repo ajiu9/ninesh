@@ -20,13 +20,13 @@
     "git",
     "repository"
   ],
-  "bin": "./bin/index.cjs",
+  "bin": "./bin/index.js",
   "files": [
     "bin",
     "dist"
   ],
   "scripts": {
-    "build": " pnpm clean:dist && tsup --format cjs,esm --dts && pnpm build:zsh",
+    "build": "tsup --clean --dts && pnpm build:zsh",
     "prepublishOnly": "pnpm build",
     "release": "bumpp && npm publish",
     "build:zsh": "tsx ./src/app/zsh/scripts/build.ts",
@@ -46,6 +46,7 @@
     "cac": "^6.7.14",
     "clipboard-n": "^0.0.3",
     "comuse-shared": "^3.2.6",
+    "execa": "^9.5.2",
     "fs-extra": "^11.2.0",
     "picocolors": "^1.1.1",
     "yargs": "^17.7.2"
