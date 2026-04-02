@@ -123,6 +123,32 @@ For more information on a specific command, run:
       }
     },
   )
+  .command(
+    'shell [action] [target]',
+    'Shell management - detect, list, configure terminals',
+    (yargs: any) => {
+      return yargs
+        .positional('action', {
+          describe: 'Action to perform',
+          choices: ['info', 'list', 'switch', 'install', 'config'],
+          default: 'info',
+        })
+        .positional('target', {
+          describe: 'Target shell name (for switch/install)',
+          type: 'string',
+        })
+    },
+    async (args) => {
+      header()
+      try {
+        const { run } = await import('../app/shell')
+        await run(args)
+      }
+      catch (error) {
+        handleError(error)
+      }
+    },
+  )
   .showHelpOnFail(false)
   .alias('h', 'help')
   .version('version', `${pkgJson.name} ${pkgJson.version}`)
