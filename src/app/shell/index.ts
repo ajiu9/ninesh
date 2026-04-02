@@ -1,8 +1,8 @@
 import type { ArgumentsCamelCase } from 'yargs'
 import * as p from '@clack/prompts'
 import c from 'picocolors'
-import { detectDefaultShell, listInstalledShells, type ShellType } from './detect'
 import { loadShellConfig, saveShellConfig } from './config'
+import { detectDefaultShell, listInstalledShells, type ShellType } from './detect'
 import { BASH_PLUGINS, installBashPlugin } from './plugins/bash'
 import { FISH_PLUGINS, installFishPlugin } from './plugins/fish'
 
@@ -146,9 +146,9 @@ async function installShell(target?: string) {
   p.log.warn(c.yellow('请运行以下命令安装:'))
 
   // 检测包管理器
-  if (process.platform === 'darwin') {
+  if (process.platform === 'darwin')
     console.log(`  brew install ${target}`)
-  }
+
   else if (process.platform === 'linux') {
     console.log(`  # Ubuntu/Debian`)
     console.log(`  sudo apt install ${target}`)
@@ -167,18 +167,17 @@ async function installShell(target?: string) {
 async function configureShell() {
   const shell = detectDefaultShell()
 
-  if (shell.name === 'bash') {
+  if (shell.name === 'bash')
     await configureBash()
-  }
-  else if (shell.name === 'fish') {
+
+  else if (shell.name === 'fish')
     await configureFish()
-  }
-  else if (shell.name === 'zsh') {
+
+  else if (shell.name === 'zsh')
     p.log.info(c.cyan('当前为 zsh，请使用 `ninesh init` 命令配置'))
-  }
-  else {
+
+  else
     p.log.warn(c.yellow(`当前终端 ${shell.name} 暂不支持自动配置`))
-  }
 }
 
 /**
@@ -200,12 +199,11 @@ async function configureBash() {
 
   for (const pluginName of selected as string[]) {
     const result = await installBashPlugin(pluginName)
-    if (result) {
+    if (result)
       p.log.success(c.green(`已安装插件: ${pluginName}`))
-    }
-    else {
+
+    else
       p.log.error(c.red(`安装插件失败: ${pluginName}`))
-    }
   }
 
   p.log.info(c.cyan('配置完成，请运行以下命令使配置生效:'))
@@ -231,12 +229,11 @@ async function configureFish() {
 
   for (const pluginName of selected as string[]) {
     const result = await installFishPlugin(pluginName)
-    if (result) {
+    if (result)
       p.log.success(c.green(`已安装插件: ${pluginName}`))
-    }
-    else {
+
+    else
       p.log.error(c.red(`安装插件失败: ${pluginName}`))
-    }
   }
 
   p.log.info(c.cyan('配置完成，请重新打开终端使配置生效'))

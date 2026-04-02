@@ -83,9 +83,8 @@ export async function addToBashrc(content: string, marker?: string): Promise<boo
     const targetPath = existsSync(bashrcPath) ? bashrcPath : bashProfilePath
 
     // 如果有标记，先移除旧内容
-    if (marker) {
+    if (marker)
       await removeFromBashrc(marker)
-    }
 
     // 添加新内容
     const wrappedContent = marker
@@ -107,9 +106,8 @@ export async function removeFromBashrc(marker: string): Promise<boolean> {
   try {
     const targetPath = existsSync(bashrcPath) ? bashrcPath : bashProfilePath
 
-    if (!existsSync(targetPath)) {
+    if (!existsSync(targetPath))
       return true
-    }
 
     let content = await readFileAsync(targetPath, 'utf-8')
     const startMarker = `# <<< ${marker} <<<`
@@ -130,9 +128,8 @@ export async function removeFromBashrc(marker: string): Promise<boolean> {
  */
 export async function installBashPlugin(pluginName: string): Promise<boolean> {
   const plugin = BASH_PLUGINS.find(p => p.name === pluginName)
-  if (!plugin) {
+  if (!plugin)
     return false
-  }
 
   return addToBashrc(plugin.content, `ninesh-${pluginName}`)
 }
@@ -151,9 +148,9 @@ export function ensureBashConfigExists(): void {
   const targetPath = getBashConfigPath()
   if (!existsSync(targetPath)) {
     const dir = path.dirname(targetPath)
-    if (!existsSync(dir)) {
+    if (!existsSync(dir))
       mkdirSync(dir, { recursive: true })
-    }
+
     // 创建空的配置文件
     require('fs').writeFileSync(targetPath, '# Created by ninesh\n')
   }

@@ -69,19 +69,16 @@ set -x LANG en_US.UTF-8
 export async function addToFishConfig(content: string, marker?: string): Promise<boolean> {
   try {
     // 确保 Fish 配置目录存在
-    if (!existsSync(fishConfigDir)) {
+    if (!existsSync(fishConfigDir))
       mkdirSync(fishConfigDir, { recursive: true })
-    }
 
     // 如果配置文件不存在，创建一个
-    if (!existsSync(fishConfigPath)) {
+    if (!existsSync(fishConfigPath))
       await writeFileAsync(fishConfigPath, '# Fish configuration created by ninesh\n')
-    }
 
     // 如果有标记，先移除旧内容
-    if (marker) {
+    if (marker)
       await removeFromFishConfig(marker)
-    }
 
     // 添加新内容
     const wrappedContent = marker
@@ -101,9 +98,8 @@ export async function addToFishConfig(content: string, marker?: string): Promise
  */
 export async function removeFromFishConfig(marker: string): Promise<boolean> {
   try {
-    if (!existsSync(fishConfigPath)) {
+    if (!existsSync(fishConfigPath))
       return true
-    }
 
     let content = await readFileAsync(fishConfigPath, 'utf-8')
     const startMarker = `# <<< ${marker} <<<`
@@ -124,9 +120,8 @@ export async function removeFromFishConfig(marker: string): Promise<boolean> {
  */
 export async function installFishPlugin(pluginName: string): Promise<boolean> {
   const plugin = FISH_PLUGINS.find(p => p.name === pluginName)
-  if (!plugin) {
+  if (!plugin)
     return false
-  }
 
   return addToFishConfig(plugin.content, `ninesh-${pluginName}`)
 }
@@ -149,11 +144,9 @@ export function fishConfigExists(): boolean {
  * 确保 Fish 配置文件存在
  */
 export async function ensureFishConfigExists(): Promise<void> {
-  if (!existsSync(fishConfigDir)) {
+  if (!existsSync(fishConfigDir))
     mkdirSync(fishConfigDir, { recursive: true })
-  }
 
-  if (!existsSync(fishConfigPath)) {
+  if (!existsSync(fishConfigPath))
     await writeFileAsync(fishConfigPath, '# Fish configuration created by ninesh\n')
-  }
 }

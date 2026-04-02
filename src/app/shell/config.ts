@@ -17,13 +17,11 @@ const configPath = path.join(configDir, 'shell.json')
  * 加载终端配置
  */
 export async function loadShellConfig(): Promise<ShellConfig> {
-  if (!existsSync(configDir)) {
+  if (!existsSync(configDir))
     await mkdir(configDir, { recursive: true })
-  }
 
-  if (!existsSync(configPath)) {
+  if (!existsSync(configPath))
     return createDefaultConfig()
-  }
 
   try {
     const content = await readFile(configPath, 'utf-8')
@@ -38,9 +36,8 @@ export async function loadShellConfig(): Promise<ShellConfig> {
  * 保存终端配置
  */
 export async function saveShellConfig(config: ShellConfig): Promise<void> {
-  if (!existsSync(configDir)) {
+  if (!existsSync(configDir))
     await mkdir(configDir, { recursive: true })
-  }
 
   await writeFile(configPath, JSON.stringify(config, null, 2))
 }

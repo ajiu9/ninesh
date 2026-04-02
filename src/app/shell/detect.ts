@@ -84,9 +84,8 @@ function findConfigFile(name: ShellType): string {
 
   for (const config of configs) {
     const fullPath = config.replace('~', home)
-    if (existsSync(fullPath)) {
+    if (existsSync(fullPath))
       return fullPath
-    }
   }
 
   // 返回默认配置路径
