@@ -84,6 +84,11 @@ For more information on a specific command, run:
         describe: 'Add common zsh plugins to ~/.zshrc',
         type: 'boolean',
       })
+      .option('bash', {
+        alias: 'b',
+        describe: 'Add common bash plugins to ~/.bashrc',
+        type: 'boolean',
+      })
       .option('omz', {
         alias: 'o',
         describe: 'Add o-my-zsh plugins to ~/.zshrc',

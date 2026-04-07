@@ -1,11 +1,15 @@
-import { execSync } from 'node:child_process'
+import fs from 'node:fs'
 
-export async function pushStringToZsh(cmdStr: string) {
+export async function pushStringToTarget(content: string, targetPath: string) {
   try {
-    execSync(`echo ${cmdStr} >> ~/.zshrc`)
+    fs.appendFileSync(targetPath, content)
     return true
   }
   catch {
     return false
   }
+}
+
+export async function pushStringToZsh(content: string) {
+  return pushStringToTarget(content, '~/.zshrc')
 }

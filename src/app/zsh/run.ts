@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url'
 import * as p from '@clack/prompts'
 import c from 'picocolors'
 
-import { pushStringToZsh } from '../../utils'
+import { pushStringToTarget } from '../../utils'
 
 const _homeDir = homedir()
 const zshrcPath = path.join(_homeDir, '.zshrc')
@@ -18,25 +18,28 @@ const zshrcPath = path.join(_homeDir, '.zshrc')
 export async function run(args: ArgumentsCamelCase) {
   const __dirname = fileURLToPath(new URL('.', import.meta.url))
   const zshDir = path.resolve(__dirname, 'plugins/zsh')
+  const bashDir = path.resolve(__dirname, 'plugins/bash')
+  const bashrcPath = path.join(_homeDir, '.bashrc')
 
-  if (args.zsh) {
-    await execCommand('custom zsh', `source ${zshDir}/index.zsh`)
-    return
-  }
+  if (args.bash)
+    await execCommand('custom bash', `source ${bashDir}/index.sh`, bashrcPath)
+
+  if (args.zsh)
+    await execCommand('custom zsh', `source ${zshDir}/index.zsh`, zshrcPath)
 
   if (args.ninesh) {
+    const targetPath = args.bash ? bashrcPath : zshrcPath
     await execCommand('custom ninesh',
-      `
-alias n="ninesh"\\r
-alias na="ninesh add"\\r
-alias no="ninesh obsidian"\\r
+      `alias n="ninesh"
+alias na="ninesh add"
+alias no="ninesh obsidian"
 alias ni="ninesh init"`,
+      targetPath,
     )
-    return
   }
 
   if (args.starship)
-    await execCommand('starship', `eval "$(starship init zsh)"`)
+    await execCommand('starship', `eval "$(starship init zsh)"`, zshrcPath)
 
   if (args.omz) {
     const plugins = {
@@ -76,39 +79,41 @@ alias ni="ninesh init"`,
       process.exit(1)
     }
 
-    await execCommand(pluginName, `source ${pluginPath}/${pluginName}.plugin.zsh`)
+    await execCommand(pluginName, `source ${pluginPath}/${pluginName}.plugin.zsh`, zshrcPath)
   }
 
-  async function execCommand(name: string, command: string) {
-    await removeStringBlock(name)
-    await pushStringToZshAndLog(String(blockCommandStr(name, command)))
+  async function execCommand(name: string, command: string, targetPath: string) {
+    await removeStringBlock(name, targetPath)
+    await pushStringToTargetAndLog(generateBlock(name, command), targetPath)
   }
 
-  async function pushStringToZshAndLog(cmdStr: string) {
-    await pushStringToZsh(cmdStr)
-    p.log.success(c.green(`Added ${cmdStr} to ${zshrcPath}`))
+  async function pushStringToTargetAndLog(cmdStr: string, targetPath: string) {
+    await pushStringToTarget(cmdStr, targetPath)
+    p.log.success(c.green(`Added ${cmdStr} to ${targetPath}`))
   }
 
   function marker(name: string) {
-    const marker = `\# <<< ${name} initialize <<<`
-    return marker
+    return `# <<< ${name} initialize <<<`
   }
 
-  function blockCommandStr(name: string, command: string) {
-    const markerItem = marker(name)
-    return `\r\r\'${markerItem}\\r${command}\\n${markerItem}\\n'`
+  function generateBlock(name: string, command: string) {
+    const markerLine = marker(name)
+    return `\n${markerLine}\n${command}\n${markerLine}\n`
   }
 
-  async function removeStringBlock(name: string) {
+  async function removeStringBlock(name: string, targetPath: string) {
     try {
-      let zshrcContent = await fsp.readFile(zshrcPath, 'utf-8')
+      if (!fs.existsSync(targetPath))
+        return
+
+      let content = await fsp.readFile(targetPath, 'utf-8')
 
       const startMarker = `# <<< ${name} initialize <<<`
       const endMarker = `# <<< ${name} initialize <<<`
       const regex = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`, 'g')
-      zshrcContent = zshrcContent.replace(regex, '').trim()
+      content = content.replace(regex, '').trim()
 
-      await fs.promises.writeFile(zshrcPath, zshrcContent, 'utf-8')
+      await fs.promises.writeFile(targetPath, content, 'utf-8')
     }
     catch (err) {
       console.error(err)
