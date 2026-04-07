@@ -10,6 +10,7 @@ import { run as projectRun } from '../app/project/run'
 import { run as zshRun } from '../app/zsh/run'
 import { run as updateRun } from '../command/update'
 import { pkgJson } from '../constants'
+import { checkForUpdate, printUpdateMessage } from '../utils/checkUpdate'
 
 function header(): void {
   p.intro(`${c.green(`ninesh `)}${c.dim(`v${pkgJson.version}`)}`)
@@ -182,6 +183,12 @@ For more information on a specific command, run:
 instance
   .help()
   .argv
+
+// Check for updates in background (non-blocking)
+checkForUpdate().then((latestVersion) => {
+  if (latestVersion)
+    printUpdateMessage(latestVersion)
+})
 
 function handleError(error: unknown) {
   p.log.error(c.inverse(c.red(' Failed to clone ')))

@@ -43,11 +43,11 @@
 ```typescript
 interface ShellInfo {
   name: 'bash' | 'zsh' | 'fish' | 'dash' | 'sh' | 'unknown'
-  path: string           // e.g., "/bin/zsh"
-  version: string        // e.g., "5.8"
-  configPath: string     // e.g., "~/.zshrc"
-  isDefault: boolean     // 是否为系统默认
-  isInstalled: boolean   // 是否已安装
+  path: string // e.g., "/bin/zsh"
+  version: string // e.g., "5.8"
+  configPath: string // e.g., "~/.zshrc"
+  isDefault: boolean // 是否为系统默认
+  isInstalled: boolean // 是否已安装
 }
 ```
 
@@ -225,7 +225,8 @@ function getShellVersion(name: ShellType): string {
     const output = execSync(`${name} --version`, { encoding: 'utf-8' })
     const match = output.match(/version\s+(\d+\.\d+)/i)
     return match ? match[1] : ''
-  } catch {
+  }
+  catch {
     return ''
   }
 }
@@ -236,9 +237,8 @@ function findConfigFile(name: ShellType): string {
 
   for (const config of configs) {
     const fullPath = config.replace('~', home)
-    if (existsSync(fullPath)) {
+    if (existsSync(fullPath))
       return fullPath
-    }
   }
 
   // 返回默认配置路径
@@ -318,7 +318,7 @@ export interface AppConfig {
   base: string[]
   hooks: Record<string, string>
   alias: Record<string, string>
-  shell: ShellConfig  // 新增
+  shell: ShellConfig // 新增
 }
 ```
 
