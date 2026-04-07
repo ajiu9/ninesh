@@ -8,6 +8,7 @@ import { hideBin } from 'yargs/helpers'
 import { run as obsidianRun } from '../app/obsidian/run'
 import { run as projectRun } from '../app/project/run'
 import { run as zshRun } from '../app/zsh/run'
+import { run as updateRun } from '../command/update'
 import { pkgJson } from '../constants'
 
 function header(): void {
@@ -25,6 +26,9 @@ Obsidian plugin (see also:  ninesh obsidian help)
 
 Init zsh plugin (see also:  ninesh init help)
   init          Add common zsh plugins, customize zsh config
+
+Update ninesh (see also:  ninesh update help)
+  update        Check for updates and update to the latest version
 
 For more information on a specific command, run:
   ninesh help <command>
@@ -143,6 +147,26 @@ For more information on a specific command, run:
       try {
         const { run } = await import('../app/shell')
         await run(args)
+      }
+      catch (error) {
+        handleError(error)
+      }
+    },
+  )
+  .command(
+    'update',
+    'Check for updates and update ninesh to the latest version',
+    args => args
+      .option('check', {
+        alias: 'c',
+        describe: 'Only check for updates, do not update',
+        type: 'boolean',
+      })
+      .help(),
+    async (args) => {
+      header()
+      try {
+        await updateRun(args)
       }
       catch (error) {
         handleError(error)
