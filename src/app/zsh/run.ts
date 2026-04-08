@@ -14,12 +14,23 @@ import { pushStringToTarget } from '../../utils'
 
 const _homeDir = homedir()
 const zshrcPath = path.join(_homeDir, '.zshrc')
+const bashrcPath = path.join(_homeDir, '.bashrc')
+
+function getDefaultShell(): 'zsh' | 'bash' {
+  const shell = process.env.SHELL || ''
+  if (shell.includes('zsh'))
+    return 'zsh'
+  return 'bash'
+}
+
+function getDefaultRcPath(): string {
+  return getDefaultShell() === 'zsh' ? zshrcPath : bashrcPath
+}
 
 export async function run(args: ArgumentsCamelCase) {
   const __dirname = fileURLToPath(new URL('.', import.meta.url))
   const zshDir = path.resolve(__dirname, 'plugins/zsh')
   const bashDir = path.resolve(__dirname, 'plugins/bash')
-  const bashrcPath = path.join(_homeDir, '.bashrc')
 
   if (args.bash)
     await execCommand('custom bash', `source ${bashDir}/index.sh`, bashrcPath)
@@ -28,7 +39,7 @@ export async function run(args: ArgumentsCamelCase) {
     await execCommand('custom zsh', `source ${zshDir}/index.zsh`, zshrcPath)
 
   if (args.ninesh) {
-    const targetPath = args.bash ? bashrcPath : zshrcPath
+    const targetPath = args.bash ? bashrcPath : (args.zsh ? zshrcPath : getDefaultRcPath())
     await execCommand('custom ninesh',
       `alias n="ninesh"
 alias na="ninesh add"
