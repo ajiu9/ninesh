@@ -11,8 +11,19 @@ import { pkgJson } from '../constants'
 const ZSH_MARKER = 'custom zsh'
 const BASH_MARKER = 'custom bash'
 
+type PackageManager = 'npm' | 'pnpm' | 'yarn'
+
 export interface UpdateOptions {
   check?: boolean
+}
+
+function detectPackageManager(): PackageManager {
+  const execPath = process.execPath
+  if (execPath.includes('pnpm'))
+    return 'pnpm'
+  if (execPath.includes('yarn'))
+    return 'yarn'
+  return 'npm'
 }
 
 function getZshSourcePath(): string {
@@ -213,15 +224,31 @@ export async function run(options: UpdateOptions = {}): Promise<void> {
     const updateSpinner = p.spinner()
     updateSpinner.start('Updating ninesh...')
 
-    await execa('npm', [
-      'install',
-      '-g',
-      `${packageName}@latest`,
-      '--registry',
-      'https://registry.npmmirror.com',
-    ], {
-      stdio: 'inherit',
-    })
+    const pkgManager = detectPackageManager()
+    const registry = 'https://registry.npmmirror.com'
+
+    if (pkgManager === 'pnpm') {
+      await execa('pnpm', [
+        'add',
+        '-g',
+        `${packageName}@latest`,
+        '--registry',
+        registry,
+      ], {
+        stdio: 'inherit',
+      })
+    }
+    else {
+      await execa('npm', [
+        'install',
+        '-g',
+        `${packageName}@latest`,
+        '--registry',
+        registry,
+      ], {
+        stdio: 'inherit',
+      })
+    }
 
     updateSpinner.stop(`Updated to ${c.green(`v${latestVersion}`)}!`)
     p.log.success(c.green('ninesh has been updated successfully!'))
