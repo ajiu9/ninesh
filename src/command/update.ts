@@ -63,7 +63,9 @@ export async function run(options: UpdateOptions = {}): Promise<void> {
       `${packageName}@latest`,
       '--registry',
       'https://registry.npmmirror.com',
-    ])
+    ], {
+      stdio: 'inherit',
+    })
 
     updateSpinner.stop(`Updated to ${c.green(`v${latestVersion}`)}!`)
     p.log.success(c.green('ninesh has been updated successfully!'))
