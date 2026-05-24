@@ -119,9 +119,15 @@ For more information on a specific command, run:
     'add <path>',
     'Add a new repository to you directory',
     (yargs: any) => {
-      return yargs.positional('path', {
-        describe: 'Add a new repository to you directory',
-      })
+      return yargs
+        .positional('path', {
+          describe: 'Add a new repository to you directory',
+        })
+        .option('base', {
+          alias: 'b',
+          describe: 'Set base directory for repository (skip interactive prompt)',
+          type: 'string',
+        })
     },
     async (args) => {
       header()

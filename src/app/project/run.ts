@@ -29,38 +29,48 @@ const defaults: BasicConfigJson = {
   },
 }
 export function run(args: ArgumentsCamelCase) {
-  const { path } = args
-  init(path as string)
+  const { path, base } = args
+  init(path as string, base as string | undefined)
 }
 
-async function init(pathArg: string) {
+async function init(pathArg: string, baseDir?: string) {
   const config = await loadConfig()
   const repo = normalizeRepo(pathArg)
   // https://github.com/ajiu9/ninesh.git
   // => $BASE/github.com/ajiu9/ninesh
   const key = parseGitUrl(repo).replace(/https?:\/\//, '')
 
-  const base = await chooseBaseDirectory(config.base)
+  const base = baseDir ?? await chooseBaseDirectory(config.base)
   const targetPath = path.join(base as string, key)
   p.log.step(c.cyan(`Start adding repository: ${repo}`))
 
-  if (await existsSync(targetPath)) {
-    p.log.info(c.cyan(`${targetPath} already exist`))
-    await clipboard.write(`cd ${targetPath}`)
-    p.log.info(`${c.green('📋  Copied to clipboard')}, just use Ctrl+V`)
-    p.log.info(c.green(`${targetPath} already exist`))
+  async function copyToClipboard(dir: string) {
+    try {
+      await clipboard.write(`cd ${dir}`)
+      p.log.info(`${c.green('📋  Copied to clipboard')}, just use Ctrl+V`)
+    }
+    catch {
+      // Silently skip on headless/server environments
+      p.log.info(c.dim(`cd ${dir}`))
+    }
   }
 
-  if (!existsSync(targetPath)) await mkdir(targetPath, { recursive: true })
+  if (await existsSync(targetPath)) {
+    p.log.info(c.cyan(`${targetPath} already exist`))
+    await copyToClipboard(targetPath)
+    return
+  }
+
+  await mkdir(targetPath, { recursive: true })
+
+  p.log.info(c.green(`Cloning into ${targetPath}`))
+  // TODO
+  // support window system
+  const env = Object.assign({
+    GIT_SSH: path.join(__dirname, '/command/ssh.js'),
+  }, process.env)
 
   try {
-    p.log.info(c.green(`'Cloning into ${targetPath}`))
-    // TODO
-    // support window system
-    const env = Object.assign({
-      GIT_SSH: path.join(__dirname, '/command/ssh.js'),
-    }, process.env)
-
     await execa('git',
       [
         'clone',
@@ -69,14 +79,14 @@ async function init(pathArg: string) {
       ],
       { env, stdio: 'inherit' },
     )
-
-    await clipboard.write(`cd ${targetPath}`)
-    p.log.info(`${c.green('📋  Copied to clipboard')}, just use Ctrl+V`)
   }
   catch (e) {
-    const error = e as unknown as Error
-    p.log.warn(`Failed to clone or copy to clipboard: ${error.message}`)
+    const error = e as Error
+    p.log.error(`Failed to clone repository: ${error.message}`)
+    throw error
   }
+
+  await copyToClipboard(targetPath)
 
   function normalizeRepo(url: string): string {
     const alias = config.alias
