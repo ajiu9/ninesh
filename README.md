@@ -1,71 +1,247 @@
 # Ninesh
 
-[![NPM version][npm-image]][npm-url]
+[![npm version](https://img.shields.io/npm/v/ninesh.svg?style=flat-square)](https://npmjs.com/package/ninesh)
+[![License](https://img.shields.io/npm/l/ninesh.svg?style=flat-square)](https://github.com/ajiu9/ninesh/blob/main/LICENSE)
+
+Ajiu9's daily shell companion — a CLI toolkit that supercharges your terminal workflow with Obsidian template generation, shell configuration, and structured repository management.
 
 ## Features
 
-- Generate daily/weekly/empty template for [Obsidian](https://obsidian.md)
-- Statistical weekly tasks or year tasks
-- Add common zsh plugins
+- **Obsidian Integration** — Generate daily/weekly/task templates for [Obsidian](https://obsidian.md)
+- **Shell Bootstrap** — One-command setup for zsh/bash plugins (oh-my-zsh, starship, syntax highlighting, etc.)
+- **Repository Manager** — Clone repos into a clean `host/user/repo` directory structure
+- **Shell Manager** — Detect, list, switch, and configure shells (bash/zsh/fish)
+- **Self-update** — Built-in update checker with one-command upgrade
 
 ## Install
+
 ```shell
 npm install -g ninesh
 ```
 
-## Shell
-Usage: ninesh [-v | --version] [-h | --help] <command> [<args>]
+## Commands
 
-Commands:
+```
+ninesh <command> [options]
+```
 
-  - `ninesh obsidian [options]`  Obsidian plugin, Genarate Obsidian template(see also: ninesh obsidian help)
-  - `ninesh init [options]`      Add common zsh plugins, customize zsh config
-  - `ninesh add [options]`  Manage repository easily
+| Command | Description |
+|---------|-------------|
+| `obsidian` | Generate Obsidian templates (daily, weekly, task, empty) |
+| `init` | Bootstrap zsh/bash with common plugins and aliases |
+| `add` | Clone a repository into a structured directory layout |
+| `shell` | Detect, list, switch, or configure your terminal shell |
+| `update` | Check for and install the latest version |
 
-Init zsh plugin (see also:  ninesh init help)
-  - `init`          Add common zsh plugins, customize zsh config
+---
 
-For more information on a specific command, run:
-  - `ninesh help <command>`
+### `ninesh obsidian`
 
-## Manage repository
-$ ninesh add [options]
+Generate Obsidian note templates from the command line.
 
-- Add repository to $BASE/[github.com|gitlab.com|...]/you-project
+```shell
+ninesh obsidian [options]
+```
 
-provide a structure making it easy
+| Option | Alias | Description |
+|--------|-------|-------------|
+| `--daily` | `-d` | Generate daily plan template |
+| `--weekly` | `-w` | Generate weekly plan template |
+| `--empty` | `-e` | Generate blank template |
+| `--task` | `-t` | Generate task report (choices: `weekly`, `yearly`) |
+| `--next` | `-n` | Generate for the next period (next day / next week) |
+
+**Examples:**
+
+```shell
+# Daily note
+ninesh obsidian -d
+
+# Weekly plan
+ninesh obsidian -w
+
+# Task report (weekly)
+ninesh obsidian -t weekly -w
+
+# Next day's daily note
+ninesh obsidian -d -n
+```
+
+**Screenshots:**
+
+| Daily | Weekly | Task Report |
+|-------|--------|-------------|
+| ![daily](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-daily.png) | ![weekly](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-weekly.png) | ![task](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-task-weekly.png) |
+
+On first run, a config file is created at `~/.config/ninesh/.obsidian/config.json` where you can customize template paths and target directories.
+
+---
+
+### `ninesh init`
+
+Bootstrap your shell environment with common plugins and handy aliases.
+
+```shell
+ninesh init [options]
+```
+
+| Option | Alias | Description |
+|--------|-------|-------------|
+| `--zsh` | `-z` | Add custom zsh plugins to `~/.zshrc` |
+| `--bash` | `-b` | Add custom bash plugins to `~/.bashrc` |
+| `--omz` | `-o` | Install oh-my-zsh plugins (autosuggestions, completions, syntax highlighting) |
+| `--starship` | `-s` | Add [Starship](https://starship.rs) prompt to `~/.zshrc` |
+| `--ninesh` | `-n` | Add ninesh shortcut aliases (`n`, `na`, `no`, `ni`) |
+
+**Examples:**
+
+```shell
+# Full zsh setup: custom plugins + omz + starship + shortcuts
+ninesh init -z -o -s -n
+
+# Bash setup
+ninesh init -b -n
+
+# Just add ninesh aliases
+ninesh init -n
+```
+
+**What gets installed:**
+
+| Flag | Installs |
+|------|----------|
+| `-z` | Custom ninesh zsh plugin (aliases, git helpers, etc.) |
+| `-b` | Custom ninesh bash plugin |
+| `-o` | `zsh-autosuggestions`, `zsh-completions`, `fast-syntax-highlighting` |
+| `-s` | Starship prompt via `eval "$(starship init zsh)"` |
+| `-n` | Shortcuts: `n` → ninesh, `na` → ninesh add, `no` → ninesh obsidian, `ni` → ninesh init |
+
+---
+
+### `ninesh add`
+
+Clone a repository into an organized directory structure.
+
+```shell
+ninesh add <repository-url> [options]
+```
+
+| Option | Alias | Description |
+|--------|-------|-------------|
+| `--base` | `-b` | Set base directory (skips interactive prompt) |
+
+**What it does:**
+
+Clones `https://github.com/ajiu9/ninesh` into:
 ```
 $BASE
-|- github.com
-|  `- popomore
-|     `- ninesh
-`- gitlab.com
-   `- popomore
-      `- ninesh
+└── github.com
+    └── ajiu9
+        └── ninesh
 ```
 
-## Generate Obsidian template
+**Examples:**
 
-$ ninesh obsidian [options]
+```shell
+# Clone with interactive base directory selection
+ninesh add https://github.com/user/repo.git
 
-  - -v, --version            Display version number
-  - -d, --daily              Generate daily plan template
-  - -w, --weekly             Generate weekly plan template
-  - -e, --empty              Generate empty template
-  - -t, --task               Generate daily plan template
-  - -n, --next               Generate daily plan template
-  - -q, --quiet              Quiet mode
-  - -v, --version <version>  Target version
+# Clone using a shorthand alias (configurable)
+ninesh add github://user/repo
 
-$ ninesh obsidian -d
+# Clone with explicit base directory
+ninesh add https://github.com/user/repo.git -b ~/Projects
+```
 
-![obsiflow-daily.png](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-daily.png)
+The target directory path is automatically copied to your clipboard after cloning.
 
-$ ninesh obsidian -w
-![obsiflow-weekly.png](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-weekly.png)
+---
 
-$ ninesh obsidian -t -w
-![obsiflow-task-weekly.png](https://raw.githubusercontent.com/ajiu9/shell/main/static/img/obsiflow-task-weekly.png)
+### `ninesh shell`
 
-[npm-image]: https://img.shields.io/npm/v/ninesh.svg?style=flat-square
-[npm-url]: https://npmjs.com/package/ninesh
+Inspect and manage your terminal shells.
+
+```shell
+ninesh shell [action] [target]
+```
+
+| Action | Description |
+|--------|-------------|
+| `info` | Show current shell details (name, path, version, config file) |
+| `list` | List all installed shells and available ones to install |
+| `switch` | Change your default shell (interactive or by name) |
+| `install` | Show install commands for zsh/fish on your platform |
+| `config` | Configure shell plugins interactively (bash/fish supported) |
+
+**Examples:**
+
+```shell
+# Show current shell info
+ninesh shell
+
+# List all installed shells
+ninesh shell list
+
+# Switch to zsh
+ninesh shell switch zsh
+
+# Show how to install fish
+ninesh shell install fish
+
+# Configure current shell interactively
+ninesh shell config
+```
+
+---
+
+### `ninesh update`
+
+Check for and install updates.
+
+```shell
+ninesh update [options]
+```
+
+| Option | Alias | Description |
+|--------|-------|-------------|
+| `--check` | `-c` | Only check for updates (don't install) |
+
+**Examples:**
+
+```shell
+# Check and install latest version
+ninesh update
+
+# Only check (no install)
+ninesh update -c
+```
+
+Ninesh also checks for updates automatically in the background when you run any command.
+
+## Configuration
+
+Configuration files are stored under `~/.config/ninesh/`:
+
+| File | Purpose |
+|------|---------|
+| `config.json` | Base directories, URL aliases, hooks |
+| `.obsidian/config.json` | Obsidian template paths and target directories |
+
+## Development
+
+```shell
+# Clone and install
+git clone https://github.com/ajiu9/ninesh.git
+cd ninesh
+pnpm install
+
+# Build
+pnpm build
+
+# Link for local development
+pnpm dev
+```
+
+## License
+
+[MIT](LICENSE)
