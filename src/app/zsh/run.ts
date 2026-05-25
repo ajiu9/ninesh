@@ -53,7 +53,7 @@ alias ni="ninesh init"`,
     const targetPath = args.bash ? bashrcPath : (args.zsh ? zshrcPath : getDefaultRcPath())
     const defaultShell = args.bash ? 'bash' : (args.zsh ? 'zsh' : getDefaultShell())
     if (defaultShell === 'zsh')
-      await execCommand('jump zsh', `source ${zshDir}/jump.zsh`, targetPath)
+      await execCommand('jump zsh', `source ${zshDir}/plugins/jump.zsh`, targetPath)
     else
       await execCommand('jump bash', `source ${bashDir}/jump.sh`, targetPath)
   }
