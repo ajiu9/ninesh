@@ -49,6 +49,15 @@ alias ni="ninesh init"`,
     )
   }
 
+  if (args.jump) {
+    const targetPath = args.bash ? bashrcPath : (args.zsh ? zshrcPath : getDefaultRcPath())
+    const defaultShell = args.bash ? 'bash' : (args.zsh ? 'zsh' : getDefaultShell())
+    if (defaultShell === 'zsh')
+      await execCommand('jump zsh', `source ${zshDir}/jump.zsh`, targetPath)
+    else
+      await execCommand('jump bash', `source ${bashDir}/jump.sh`, targetPath)
+  }
+
   if (args.starship)
     await execCommand('starship', `eval "$(starship init zsh)"`, zshrcPath)
 
