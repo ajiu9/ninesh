@@ -18,7 +18,7 @@ j() {
   local dir
   dir=$(ninesh jump "$@")
   if [[ -n "$dir" && -d "$dir" ]]; then
-    cd "$dir" && ls -alhG
+    cd "$dir" && ls -alh
   elif [[ -n "$dir" ]]; then
     echo "$dir"
   fi
