@@ -74,10 +74,40 @@ function matchQuality(query: string, dirPath: string): number {
 }
 
 /**
+ * Calculate CWD proximity bonus based on common prefix segments.
+ * Paths under the same project tree as CWD get a significant boost.
+ * Returns a value in [0, 0.5].
+ */
+function proximityBonus(cwd: string, dirPath: string): number {
+  const cwdSegs = cwd.toLowerCase().split('/').filter(Boolean)
+  const pathSegs = dirPath.toLowerCase().split('/').filter(Boolean)
+
+  let common = 0
+  for (let i = 0; i < Math.min(cwdSegs.length, pathSegs.length); i++) {
+    if (cwdSegs[i] === pathSegs[i])
+      common++
+    else
+      break
+  }
+
+  // No proximity bonus for unrelated paths
+  if (common === 0)
+    return 0
+
+  // Bonus: log-scale to avoid penalizing deep hierarchies too much,
+  // but still reward more shared segments.
+  // 1 common → 0.05, 3 → 0.15, 5 → 0.22, 10 → 0.30
+  return Math.min(0.5, Math.log2(common + 1) * 0.15)
+}
+
+/**
  * Search the database for directories matching the query.
  * Returns results sorted by score (highest first).
+ *
+ * @param cwd - Current working directory, used to boost results
+ *              within the same project/prefix tree.
  */
-export function search(query: string, db: Database, maxResults = 10): MatchResult[] {
+export function search(query: string, db: Database, maxResults = 10, cwd?: string): MatchResult[] {
   const lowerQuery = query.toLowerCase()
   const results: MatchResult[] = []
 
@@ -86,7 +116,10 @@ export function search(query: string, db: Database, maxResults = 10): MatchResul
       continue
 
     const quality = matchQuality(lowerQuery, dirPath.toLowerCase())
-    const score = entry.weight * (1 + quality)
+    const proxBonus = cwd ? proximityBonus(cwd, dirPath.toLowerCase()) : 0
+    // Proximity bonus is additive to quality, so same-project entries
+    // can overcome moderate weight disadvantages from other projects.
+    const score = entry.weight * (1 + quality + proxBonus)
 
     results.push({
       path: dirPath,
