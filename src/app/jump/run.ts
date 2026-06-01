@@ -39,7 +39,7 @@ export async function run(args: ArgumentsCamelCase<JumpArgs>): Promise<void> {
 
   // Query mode: find best match and print path to stdout
   const db = query()
-  const results = search(args.query, db, 1)
+  const results = search(args.query, db, 1, process.cwd())
 
   if (results.length === 0) {
     p.log.error(c.red(`No matching directory for: ${args.query}`))
