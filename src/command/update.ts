@@ -172,6 +172,31 @@ async function checkBashConfig(): Promise<void> {
   }
 }
 
+async function fetchLatestVersion(packageName: string): Promise<{ version: string, registry: string }> {
+  const registries = [
+    'https://registry.npmjs.org',
+    'https://registry.npmmirror.com',
+  ]
+
+  for (const registry of registries) {
+    try {
+      const { stdout } = await execa('npm', [
+        'view',
+        packageName,
+        'version',
+        '--registry',
+        registry,
+      ])
+      return { version: stdout, registry }
+    }
+    catch {
+      // try next registry
+    }
+  }
+
+  throw new Error('Failed to fetch latest version from all registries')
+}
+
 export async function run(options: UpdateOptions = {}): Promise<void> {
   const currentVersion = pkgJson.version
   const packageName = pkgJson.name
@@ -182,14 +207,8 @@ export async function run(options: UpdateOptions = {}): Promise<void> {
   s.start('Checking for updates...')
 
   try {
-    // Get latest version from npm
-    const { stdout: latestVersion } = await execa('npm', [
-      'view',
-      packageName,
-      'version',
-      '--registry',
-      'https://registry.npmmirror.com',
-    ])
+    // Get latest version from npm — official registry first, mirror as fallback
+    const { version: latestVersion, registry } = await fetchLatestVersion(packageName)
 
     s.stop(`Latest version: ${c.cyan(`v${latestVersion}`)}`)
 
@@ -225,7 +244,6 @@ export async function run(options: UpdateOptions = {}): Promise<void> {
     updateSpinner.start('Updating ninesh...')
 
     const pkgManager = detectPackageManager()
-    const registry = 'https://registry.npmmirror.com'
 
     if (pkgManager === 'pnpm') {
       await execa('pnpm', [
