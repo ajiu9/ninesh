@@ -51,23 +51,32 @@ export async function checkForUpdate(): Promise<string | null> {
     return null
   }
 
-  // Fetch latest version from npm
-  try {
-    const { stdout: latestVersion } = await execa('npm', [
-      'view',
-      packageName,
-      'version',
-      '--registry',
-      'https://registry.npmmirror.com',
-    ])
+  // Fetch latest version from npm — try official registry first, mirror as fallback
+  const registries = [
+    'https://registry.npmjs.org',
+    'https://registry.npmmirror.com',
+  ]
 
-    await setCache(latestVersion)
+  for (const registry of registries) {
+    try {
+      const { stdout: latestVersion } = await execa('npm', [
+        'view',
+        packageName,
+        'version',
+        '--registry',
+        registry,
+      ])
 
-    if (semver.gt(latestVersion, currentVersion))
-      return latestVersion
-  }
-  catch {
-    // ignore network errors
+      await setCache(latestVersion)
+
+      if (semver.gt(latestVersion, currentVersion))
+        return latestVersion
+
+      return null
+    }
+    catch {
+      // try next registry
+    }
   }
 
   return null
