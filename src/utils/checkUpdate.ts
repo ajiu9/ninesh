@@ -83,12 +83,12 @@ export async function checkForUpdate(): Promise<string | null> {
 }
 
 export function printUpdateMessage(latestVersion: string): void {
-  console.log()
-  console.log(
+  console.error()
+  console.error(
     c.yellow(`  A new version of ninesh is available: ${c.dim(pkgJson.version)} → ${c.green(`v${latestVersion}`)}`),
   )
-  console.log(
+  console.error(
     c.dim(`  Run ${c.cyan('ninesh update')} to update.`),
   )
-  console.log()
+  console.error()
 }
