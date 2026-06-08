@@ -229,6 +229,11 @@ For more information on a specific command, run:
       header()
       try {
         await updateRun(args)
+        // After update, check if we're now on the latest version
+        checkForUpdate().then((latestVersion) => {
+          if (latestVersion)
+            printUpdateMessage(latestVersion)
+        })
       }
       catch (error) {
         handleError(error)
@@ -244,12 +249,6 @@ For more information on a specific command, run:
 instance
   .help()
   .argv
-
-// Check for updates in background (non-blocking)
-checkForUpdate().then((latestVersion) => {
-  if (latestVersion)
-    printUpdateMessage(latestVersion)
-})
 
 function handleError(error: unknown) {
   p.log.error(c.inverse(c.red(' Failed to clone ')))
