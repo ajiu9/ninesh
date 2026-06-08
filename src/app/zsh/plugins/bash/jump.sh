@@ -5,7 +5,7 @@
 
 # Record every directory change in the background
 _jump_prompt() {
-  ninesh jump --add "$PWD" &>/dev/null &
+  (ninesh jump --add "$PWD" &>/dev/null &)
 }
 
 # Jump to a frequently visited directory
