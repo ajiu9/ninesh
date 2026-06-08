@@ -118,6 +118,7 @@ For more information on a specific command, run:
       header()
       try {
         await zshRun(args)
+        p.outro(c.green('Done!'))
       }
       catch (error) {
         handleError(error)
