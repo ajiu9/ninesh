@@ -17,24 +17,24 @@ export interface JumpArgs {
 export async function run(args: ArgumentsCamelCase<JumpArgs>): Promise<void> {
   if (args.add) {
     add(args.add)
-    return
+    process.exit(0)
   }
 
   if (args.purge) {
     const removed = purge()
     p.log.success(c.green(`Purged ${removed} non-existent director${removed === 1 ? 'y' : 'ies'}`))
-    return
+    process.exit(0)
   }
 
   if (args.decay) {
     decay()
     p.log.success(c.green('All weights decayed'))
-    return
+    process.exit(0)
   }
 
   if (args.stat || !args.query) {
     showStats(args.top || 10)
-    return
+    process.exit(0)
   }
 
   // Query mode: find best match and print path to stdout
@@ -48,6 +48,10 @@ export async function run(args: ArgumentsCamelCase<JumpArgs>): Promise<void> {
 
   // Only output the path — shell function captures this for cd
   console.log(results[0].path)
+
+  // Explicit exit: the module-level checkForUpdate() HTTP request keeps the
+  // event loop alive, which would otherwise prevent the process from exiting.
+  process.exit(0)
 }
 
 function showStats(top: number): void {
