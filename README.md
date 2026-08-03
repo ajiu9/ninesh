@@ -11,6 +11,7 @@ Ajiu9's daily shell companion — a CLI toolkit that supercharges your terminal 
 - **Shell Bootstrap** — One-command setup for zsh/bash plugins (oh-my-zsh, starship, syntax highlighting, etc.)
 - **Repository Manager** — Clone repos into a clean `host/user/repo` directory structure
 - **Shell Manager** — Detect, list, switch, and configure shells (bash/zsh/fish)
+- **Skills Sync** — Sync skills directories across applications via symlinks (Claude, Multica, WorkBuddy)
 - **Self-update** — Built-in update checker with one-command upgrade
 
 ## Install
@@ -31,6 +32,7 @@ ninesh <command> [options]
 | `init` | Bootstrap zsh/bash with common plugins and aliases |
 | `add` | Clone a repository into a structured directory layout |
 | `shell` | Detect, list, switch, or configure your terminal shell |
+| `skills` | Sync skills directories across apps via symlinks |
 | `update` | Check for and install the latest version |
 
 ---
@@ -194,6 +196,80 @@ ninesh shell config
 
 ---
 
+### `ninesh skills`
+
+Sync skills directories across applications via symlinks. Manage all your Claude, Multica, and WorkBuddy skills from a single source directory.
+
+```shell
+ninesh skills [action]
+```
+
+| Action | Description |
+|--------|-------------|
+| `init` | Scan installed apps, configure source and targets interactively |
+| `sync` | Create/update symlinks from source to selected target directories |
+| `unsync` | Remove symlinks from selected target directories |
+
+**How it works:**
+
+`ninesh skills sync` creates a **symlink** for each first-level subdirectory in the source directory into each target directory. Files are ignored — only directories are linked.
+
+```
+~/.claude/skills/          # source
+├── graphify/
+├── app-refactor/
+└── tool-usage/
+
+~/.multica/skills/         # target (after sync)
+├── graphify/       → ~/.claude/skills/graphify/
+├── app-refactor/   → ~/.claude/skills/app-refactor/
+└── tool-usage/     → ~/.claude/skills/tool-usage/
+```
+
+**Examples:**
+
+```shell
+# First time: scan and configure
+ninesh skills init
+
+# Sync all (interactive target selection)
+ninesh skills sync
+
+# Remove all symlinks from selected targets
+ninesh skills unsync
+```
+
+**Sync behavior:**
+
+| Scenario | Behavior |
+|----------|----------|
+| Target already correct symlink | Skip |
+| Target is a real directory | Backup (`→ name.bak`), then symlink |
+| Target is a wrong symlink | Replace with correct one |
+| Source adds new directory | Auto-detected, creates symlink |
+| Source deletes a directory | Dead symlink cleaned up |
+| Source contains files | Ignored (directories only) |
+| Nothing changed | "all synced, nothing to do" |
+
+**Configuration:**
+
+Stored in `~/.ninesh/config.json` under the `skills` key:
+
+```json
+{
+  "skills": {
+    "source": "~/.claude/skills",
+    "targets": {
+      "claude": "~/.claude/skills",
+      "multica": "~/.multica/skills",
+      "workbuddy": "~/.workbuddy/skills"
+    }
+  }
+}
+```
+
+---
+
 ### `ninesh update`
 
 Check for and install updates.
@@ -220,11 +296,13 @@ Ninesh also checks for updates automatically in the background when you run any 
 
 ## Configuration
 
-Configuration files are stored under `~/.config/ninesh/`:
+Configuration files are stored under `~/.ninesh/`:
 
 | File | Purpose |
 |------|---------|
-| `config.json` | Base directories, URL aliases, hooks |
+| `config.json` | Base directories, URL aliases, hooks, skills sync config |
+| `shell.json` | Shell detection and configuration state |
+| `jump.json` | Jump command directory database |
 | `.obsidian/config.json` | Obsidian template paths and target directories |
 
 ## Development
