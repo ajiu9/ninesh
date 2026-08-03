@@ -216,6 +216,28 @@ For more information on a specific command, run:
     },
   )
   .command(
+    'skills [action]',
+    'Sync skills across applications via symlinks',
+    (yargs: any) => {
+      return yargs
+        .positional('action', {
+          describe: 'Action to perform',
+          choices: ['init', 'sync', 'unsync'],
+          default: 'sync',
+        })
+    },
+    async (args: any) => {
+      header()
+      try {
+        const { run } = await import('../app/skills')
+        await run(args)
+      }
+      catch (error) {
+        handleError(error)
+      }
+    },
+  )
+  .command(
     'update',
     'Check for updates and update ninesh to the latest version',
     args => args
