@@ -5,6 +5,7 @@ import yargs from 'yargs'
 
 import { hideBin } from 'yargs/helpers'
 
+import { run as deployRun } from '../app/deploy'
 import { run as jumpRun } from '../app/jump/run'
 import { run as obsidianRun } from '../app/obsidian/run'
 import { run as projectRun } from '../app/project/run'
@@ -31,6 +32,9 @@ Init zsh plugin (see also:  ninesh init help)
 
 Jump directories (see also:  ninesh jump help)
   jump         Jump to frequently visited directories
+
+Deploy service (see also:  ninesh deploy help)
+  deploy       GitHub webhook auto deploy service
 
 Update ninesh (see also:  ninesh update help)
   update       Check for updates and update to the latest version
@@ -231,6 +235,31 @@ For more information on a specific command, run:
       try {
         const { run } = await import('../app/skills')
         await run(args)
+      }
+      catch (error) {
+        handleError(error)
+      }
+    },
+  )
+  .command(
+    'deploy [action] [name]',
+    'GitHub webhook auto deploy service',
+    (yargs: any) => {
+      return yargs
+        .positional('action', {
+          describe: 'Action to perform',
+          choices: ['init', 'add', 'list', 'remove', 'start'],
+          default: 'list',
+        })
+        .positional('name', {
+          describe: 'Project name (for remove action)',
+          type: 'string',
+        })
+    },
+    async (args: any) => {
+      header()
+      try {
+        await deployRun(args)
       }
       catch (error) {
         handleError(error)
