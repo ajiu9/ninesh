@@ -7,4 +7,5 @@ export default defineConfig({
   },
   shims: true,
   format: ['esm'],
+  external: ['github-webhook-handler'],
 })

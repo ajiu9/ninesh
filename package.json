@@ -48,6 +48,7 @@
     "comuse-shared": "^3.2.6",
     "execa": "^9.5.2",
     "fs-extra": "^11.2.0",
+    "op-pkg": "^0.0.3",
     "picocolors": "^1.1.1",
     "semver": "^7.7.4",
     "yargs": "^17.7.2"
@@ -66,6 +67,7 @@
     "consola": "^3.2.3",
     "eslint": "^9.10.0",
     "fast-glob": "^3.3.2",
+    "github-webhook-handler": "^2.1.18",
     "jiti": "^2.4.2",
     "lint-staged": "^15.2.7",
     "minimist": "^1.2.8",
