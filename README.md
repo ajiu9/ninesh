@@ -12,6 +12,7 @@ Ajiu9's daily shell companion — a CLI toolkit that supercharges your terminal 
 - **Repository Manager** — Clone repos into a clean `host/user/repo` directory structure
 - **Shell Manager** — Detect, list, switch, and configure shells (bash/zsh/fish)
 - **Skills Sync** — Sync skills directories across applications via symlinks (Claude, Multica, WorkBuddy)
+- **Auto Deploy** — GitHub webhook server for automated deployment when pushing to main
 - **Self-update** — Built-in update checker with one-command upgrade
 
 ## Install
@@ -33,6 +34,7 @@ ninesh <command> [options]
 | `add` | Clone a repository into a structured directory layout |
 | `shell` | Detect, list, switch, or configure your terminal shell |
 | `skills` | Sync skills directories across apps via symlinks |
+| `deploy` | GitHub webhook server for auto-deployment |
 | `update` | Check for and install the latest version |
 
 ---
@@ -270,6 +272,106 @@ Stored in `~/.ninesh/config.json` under the `skills` key:
 
 ---
 
+### `ninesh deploy`
+
+GitHub webhook server for automated deployment. Listens for push events and deploys your projects automatically.
+
+```shell
+ninesh deploy [action]
+```
+
+| Action | Description |
+|--------|-------------|
+| `init` | Initialize config and add first project interactively |
+| `add` | Add a new project to deployment config |
+| `list` | List all configured projects |
+| `remove` | Remove a project from config |
+| `start` | Start the webhook server (foreground) |
+
+**Quick start:**
+
+```shell
+# 1. Initialize configuration
+ninesh deploy init
+
+# 2. Start the webhook server
+ninesh deploy start
+
+# 3. Configure GitHub webhook
+# URL: http://your-server:3000/webhooks
+# Secret: the one you set in step 1
+```
+
+**Workflow:**
+
+1. Push to `release` branch → GitHub Actions builds → Merges to `main`
+2. Push to `main` → Triggers webhook → Server pulls and deploys
+
+**Project configuration:**
+
+Each project has:
+- `name` — Repository name (matches webhook payload)
+- `sourceDir` — Where to clone/pull the repo on server
+- `targetDir` — Deployment target (e.g., nginx html directory)
+- `buildOutput` — Build output directory relative to sourceDir (e.g., `dist`, `packages/.vitepress/dist`)
+- `gitUrl` — Git repository URL
+- `branch` — Branch to deploy (default: `main`)
+
+**Examples:**
+
+```shell
+# Initialize and add first project
+ninesh deploy init
+
+# Add another project
+ninesh deploy add
+
+# List all projects
+ninesh deploy list
+
+# Start webhook server (use systemd/pm2 for production)
+ninesh deploy start
+
+# Remove a project
+ninesh deploy remove project-name
+```
+
+**Configuration:**
+
+Stored in `~/.ninesh/deploy.json`:
+
+```json
+{
+  "server": {
+    "port": 3000,
+    "path": "/webhooks",
+    "secret": "your-webhook-secret"
+  },
+  "projects": [
+    {
+      "name": "my-site",
+      "sourceDir": "/root/Code/github.com/user/my-site",
+      "targetDir": "/usr/share/nginx/html/my-site",
+      "buildOutput": "dist",
+      "gitUrl": "https://github.com/user/my-site.git",
+      "branch": "main"
+    }
+  ]
+}
+```
+
+**Production setup:**
+
+For production, use `systemd` or `pm2` to manage the service:
+
+```shell
+# Using pm2
+pm2 start "ninesh deploy start" --name deploy
+pm2 save
+```
+
+---
+
 ### `ninesh update`
 
 Check for and install updates.
@@ -303,6 +405,7 @@ Configuration files are stored under `~/.ninesh/`:
 | `config.json` | Base directories, URL aliases, hooks, skills sync config |
 | `shell.json` | Shell detection and configuration state |
 | `jump.json` | Jump command directory database |
+| `deploy.json` | Deploy server and project configuration |
 | `.obsidian/config.json` | Obsidian template paths and target directories |
 
 ## Development
