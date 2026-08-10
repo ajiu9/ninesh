@@ -18,11 +18,27 @@ export interface UpdateOptions {
 }
 
 function detectPackageManager(): PackageManager {
-  const execPath = process.execPath
-  if (execPath.includes('pnpm'))
+  // 检测当前 ninesh 可执行文件的安装路径
+  // 使用 process.argv[1] 而不是 process.execPath
+  // 因为 process.execPath 返回的是 Node.js 的路径，而不是包管理器的路径
+  const execPath = (process.argv[1] || '').toLowerCase()
+
+  // pnpm 的特征路径（支持多种安装位置）
+  if (execPath.includes('/pnpm/')
+    || execPath.includes('.pnpm/')
+    || execPath.includes('/.local/share/pnpm/')
+    || execPath.includes('/library/pnpm/'))
     return 'pnpm'
-  if (execPath.includes('yarn'))
+
+  // yarn 的特征路径（支持 .yarn、/yarn、Yarn、Berry 等，大小写不敏感）
+  if (execPath.includes('/.yarn/')
+    || execPath.includes('/yarn/')
+    || execPath.includes('.yarn/')
+    || execPath.includes('/berry/'))
     return 'yarn'
+
+  // npm 的特征路径（包括 nvm、普通 npm 全局安装等）
+  // 默认返回 npm
   return 'npm'
 }
 
