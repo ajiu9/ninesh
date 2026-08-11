@@ -8,7 +8,7 @@ import { execa } from 'execa'
 import fs from 'fs-extra'
 import c from 'picocolors'
 import { defaultServerConfig, type DeployConfig, type DeployProjectConfig, loadDeployConfig, saveDeployConfig } from './config'
-import { ensurePackages } from './utils'
+import { ensurePackages, importFromCWD } from './utils'
 
 // ============================================================
 // init
@@ -326,8 +326,8 @@ async function runStart(): Promise<void> {
     return
   }
 
-  // 动态导入 github-webhook-handler
-  const { default: createHandler } = await import('github-webhook-handler')
+  // 从 CWD 动态导入 github-webhook-handler（确保与 ensurePackages 安装位置一致）
+  const { default: createHandler } = await importFromCWD('github-webhook-handler')
 
   const handler = createHandler({
     path: config.server.path,
