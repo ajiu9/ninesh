@@ -7,6 +7,41 @@ const DB_TMP_PATH = path.join(rootPath, 'jump.json.tmp')
 const MAX_TOTAL_WEIGHT = 10_000
 const DECAY_FACTOR = 0.9
 
+/**
+ * Patterns for paths that should be excluded from jump database.
+ * These are typically toolchain binary directories, not user work directories.
+ */
+const EXCLUDED_PATTERNS = [
+  // Version managers
+  /[/\\]\.nvm[/\\]/, // Node Version Manager
+  /[/\\]\.pyenv[/\\]/, // Python Version Manager
+  /[/\\]\.rbenv[/\\]/, // Ruby Version Manager
+  /[/\\]\.sdkman[/\\]/, // SDK Manager
+  /[/\\]\.cargo[/\\]bin[/\\]/, // Rust Cargo bin
+  /[/\\]\.goenv[/\\]/, // Go Version Manager
+  /[/\\]\.jenv[/\\]/, // Java Version Manager
+
+  // Binary directories (usually not user's working directories)
+  /[/\\]bin[/\\]$/, // Any path ending with /bin/
+  /[/\\]sbin[/\\]$/, // System binary directories
+
+  // System paths
+  /^[/\\]usr[/\\]local[/\\]bin$/,
+  /^[/\\]usr[/\\]bin$/,
+  /^[/\\]bin$/,
+  /^[/\\]sbin$/,
+
+  // User-local binary directories
+  /[/\\]\.local[/\\]bin$/, // ~/.local/bin
+]
+
+/**
+ * Check if a path should be excluded from the jump database.
+ */
+function shouldExclude(dirPath: string): boolean {
+  return EXCLUDED_PATTERNS.some(pattern => pattern.test(dirPath))
+}
+
 export interface Entry {
   weight: number
   lastVisited: number
@@ -63,8 +98,13 @@ function save(db: Database): void {
 }
 
 export function add(dirPath: string): void {
-  const db = load()
   const normalized = path.resolve(dirPath)
+
+  // Skip paths that are not useful for directory jumping
+  if (shouldExclude(normalized))
+    return
+
+  const db = load()
 
   if (!db.entries[normalized])
     db.entries[normalized] = { weight: 1, lastVisited: Date.now() }
