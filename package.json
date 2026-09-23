@@ -28,7 +28,7 @@
   "scripts": {
     "build": "tsup --clean --dts && pnpm build:zsh",
     "prepublishOnly": "pnpm build",
-    "release": "bumpp && npm publish",
+    "release": "bumpp",
     "build:zsh": "tsx ./src/app/zsh/scripts/build.ts",
     "clean": "pnpm run clean:dist && pnpm run -r --parallel clean",
     "clean:dist": "rimraf dist",
