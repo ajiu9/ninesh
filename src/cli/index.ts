@@ -1,3 +1,4 @@
+import os from 'node:os'
 import process from 'node:process'
 import * as p from '@clack/prompts'
 import c from 'picocolors'
@@ -13,6 +14,19 @@ import { run as zshRun } from '../app/zsh/run'
 import { run as updateRun } from '../command/update'
 import { pkgJson } from '../constants'
 import { checkForUpdate, printUpdateMessage } from '../utils/checkUpdate'
+
+// yargs calls process.cwd() while constructing the parser, and the jump
+// handler reads it again later. If the shell is sitting in a directory that
+// has been removed (e.g. a deleted worktree), process.cwd() throws ENOENT
+// and crashes the process before any command can run. Fall back to $HOME so
+// the CLI still works — notably `j <query>` can print a target and rescue
+// the user out of the dead directory.
+try {
+  process.cwd()
+}
+catch {
+  process.chdir(os.homedir())
+}
 
 function header(): void {
   p.intro(`${c.green(`ninesh `)}${c.dim(`v${pkgJson.version}`)}`)
