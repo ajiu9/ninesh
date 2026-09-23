@@ -13,7 +13,6 @@ import { run as projectRun } from '../app/project/run'
 import { run as zshRun } from '../app/zsh/run'
 import { run as updateRun } from '../command/update'
 import { pkgJson } from '../constants'
-import { checkForUpdate, printUpdateMessage } from '../utils/checkUpdate'
 
 // yargs calls process.cwd() while constructing the parser, and the jump
 // handler reads it again later. If the shell is sitting in a directory that
@@ -294,11 +293,6 @@ For more information on a specific command, run:
       header()
       try {
         await updateRun(args)
-        // After update, check if we're now on the latest version
-        checkForUpdate().then((latestVersion) => {
-          if (latestVersion)
-            printUpdateMessage(latestVersion)
-        })
       }
       catch (error) {
         handleError(error)
