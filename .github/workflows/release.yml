@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write # npm Trusted Publishing (OIDC) + provenance 必需
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          # 不设 registry-url / NODE_AUTH_TOKEN：走 Trusted Publishing (OIDC)
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: npm publish --provenance
