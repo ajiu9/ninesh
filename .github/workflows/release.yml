@@ -22,7 +22,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Node 24 捆绑 npm 11.x：trusted publishing (OIDC 免 token 认证) 需要 npm >= 11.5.0
+          # (PR #8336)，Node 22 的 npm 10.x 不支持，会回退到要 token → ENEEDAUTH
+          node-version: 24
           cache: pnpm
           # 不设 registry-url / NODE_AUTH_TOKEN：走 Trusted Publishing (OIDC)
 
